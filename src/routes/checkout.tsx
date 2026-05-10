@@ -287,10 +287,10 @@ function CheckoutPage() {
 
               {step === "cart" && (
                 <button
-                  onClick={() => navigate({ to: "/checkout", search: { step: "address" } }).then(() => setStep("address"))}
+                  onClick={() => { setStep("address"); navigate({ to: "/checkout", search: { step: "address" } }); }}
                   className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110"
                 >
-                  Buy Now <ArrowRight className="h-4 w-4" />
+                  Proceed to Buy <ArrowRight className="h-4 w-4" />
                 </button>
               )}
 
