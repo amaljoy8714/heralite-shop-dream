@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { mainProduct } from "@/lib/products";
+import { mainProduct, type Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/product/$id")({
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/product/$id")({
       { property: "og:image", content: mainProduct.images[0] },
     ],
   }),
-  loader: ({ params }) => {
+  loader: ({ params }): { product: Product } => {
     if (params.id !== mainProduct.id) throw notFound();
     return { product: mainProduct };
   },
