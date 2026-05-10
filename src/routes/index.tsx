@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Star, Truck, ShieldCheck, Sparkles } from "lucide-react";
+import { Star, Truck, ShieldCheck, Sparkles, Crown } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
@@ -7,60 +7,96 @@ import { mainProduct, soldOutProducts } from "@/lib/products";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HeraLiite — Cloud Rain Humidifier & Mood Lights" },
-      { name: "description", content: "Shop the HeraLiite Cloud Rain Humidifier and curated mood-lighting collection. Light. Life. Balance." },
+      { title: "HeraLiite — Premium Mood Lighting & Cloud Rain Humidifier" },
+      { name: "description", content: "Shop the HeraLiite Cloud Rain Humidifier — premium mood-lighting and wellness, shipped across the United States. Light. Life. Balance." },
     ],
   }),
   component: HomePage,
 });
 
+const offerStrip = [
+  "✦ FREE US Shipping on every order",
+  "✦ 50% Off Today — Limited stock",
+  "✦ Bundle 2 → Extra 15% Off",
+  "✦ 30-day money-back guarantee",
+];
+
 function HomePage() {
   return (
     <div className="min-h-screen bg-background">
+      {/* Premium offer marquee */}
+      <div className="overflow-hidden bg-[var(--primary-deep)] py-2 text-white">
+        <div className="flex animate-[scroll_30s_linear_infinite] gap-12 whitespace-nowrap text-xs font-semibold tracking-wider">
+          {[...offerStrip, ...offerStrip, ...offerStrip].map((t, i) => (
+            <span key={i} className="text-white/90">{t}</span>
+          ))}
+        </div>
+      </div>
+
       <Header />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-12 md:grid-cols-2 md:py-20">
+      <section className="relative overflow-hidden border-b border-border" style={{ background: "var(--gradient-hero)" }}>
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-14 md:grid-cols-2 md:py-24">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-primary backdrop-blur">
-              <Sparkles className="h-3.5 w-3.5" /> Bestseller · Limited stock
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/80 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-primary backdrop-blur">
+              <Crown className="h-3.5 w-3.5" /> Premium Wellness · Bestseller
             </span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-tight text-[var(--primary-deep)] md:text-6xl">
+            <h1 className="mt-5 font-display text-5xl font-bold leading-[0.95] tracking-tight text-[var(--primary-deep)] md:text-7xl">
               Light. Life.<br />
               <span className="text-primary">Balance.</span>
             </h1>
-            <p className="mt-4 max-w-md text-base text-muted-foreground md:text-lg">
-              The HeraLiite Cloud Rain Humidifier — a calming raindrop diffuser with 7-color mood lighting. Sleep deeper, breathe better, feel lighter.
+            <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
+              Curated mood-lighting & wellness pieces. Hand-picked, premium, and shipped FREE across the United States.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/product/$id" params={{ id: mainProduct.id }} className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
-                Shop Now
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link to="/product/$id" params={{ id: mainProduct.id }} className="rounded-full bg-primary px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
+                Shop Bestseller
               </Link>
-              <a href="#products" className="rounded-md border border-[var(--primary-deep)]/20 bg-white px-6 py-3 text-sm font-semibold text-[var(--primary-deep)] hover:bg-white/70">
-                Explore Collection
+              <a href="#products" className="rounded-full border-2 border-[var(--primary-deep)]/15 bg-white px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:bg-white/70">
+                Collection
               </a>
             </div>
-            <div className="mt-6 flex gap-5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> Free shipping</span>
-              <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-primary" /> 7-day returns</span>
-              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" /> 4.6 / 2,400+</span>
+            <div className="mt-8 flex flex-wrap gap-5 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> Free US shipping</span>
+              <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-primary" /> 30-day returns</span>
+              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" /> 4.6 / 2,400+ reviews</span>
             </div>
           </div>
           <div className="relative">
-            <div className="absolute inset-0 -z-10 rounded-full bg-primary/30 blur-3xl" />
-            <img src={mainProduct.images[0]} alt={mainProduct.title} className="mx-auto aspect-square w-full max-w-lg rounded-3xl object-cover shadow-[var(--shadow-glow)]" />
+            <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-primary/25 blur-3xl" />
+            <div className="absolute right-4 top-4 z-10 rotate-3 rounded-full bg-[var(--gold)] px-4 py-3 text-center font-display font-bold leading-none text-[var(--primary-deep)] shadow-lg">
+              <div className="text-[10px] uppercase tracking-widest">Today</div>
+              <div className="text-2xl">50% OFF</div>
+            </div>
+            <img src={mainProduct.images[0]} alt={mainProduct.title} className="mx-auto aspect-square w-full max-w-lg rounded-3xl border border-white/40 object-cover shadow-[var(--shadow-glow)]" />
           </div>
         </div>
       </section>
 
+      {/* Trust strip */}
+      <section className="border-b border-border bg-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-6 py-6 text-center md:grid-cols-4">
+          {[
+            ["Free US Shipping", "On every order"],
+            ["30-Day Returns", "Hassle-free"],
+            ["Premium Quality", "Hand inspected"],
+            ["Secure Checkout", "256-bit SSL"],
+          ].map(([t, s]) => (
+            <div key={t}>
+              <div className="text-sm font-bold text-[var(--primary-deep)]">{t}</div>
+              <div className="text-xs text-muted-foreground">{s}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Products */}
-      <section id="products" className="mx-auto max-w-7xl px-6 py-14">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <h2 className="font-display text-3xl font-bold md:text-4xl">Our Collection</h2>
-            <p className="mt-1 text-muted-foreground">Curated mood-lighting picks · 1 in stock today</p>
-          </div>
+      <section id="products" className="mx-auto max-w-7xl px-6 py-16">
+        <div className="mb-10 text-center">
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">The Collection</span>
+          <h2 className="mt-2 font-display text-4xl font-bold md:text-5xl">Curated · Calming · Crafted</h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">One bestseller in stock today. Restocking the rest soon — sign up to be notified.</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -68,16 +104,19 @@ function HomePage() {
           <Link
             to="/product/$id"
             params={{ id: mainProduct.id }}
-            className="group flex flex-col overflow-hidden rounded-xl border bg-card shadow-[var(--shadow-soft)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
+            className="group flex flex-col overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-[var(--shadow-soft)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
           >
             <div className="relative aspect-square overflow-hidden bg-[var(--accent)]">
               <img src={mainProduct.thumb} alt={mainProduct.title} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
-              <span className="absolute left-2 top-2 rounded-md bg-[var(--gold)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[var(--primary-deep)]">
-                57% OFF
+              <span className="absolute left-2 top-2 rounded-full bg-[var(--gold)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--primary-deep)]">
+                50% OFF
+              </span>
+              <span className="absolute right-2 top-2 rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                Bestseller
               </span>
             </div>
-            <div className="flex flex-1 flex-col gap-1.5 p-3">
-              <h3 className="line-clamp-2 text-sm font-medium text-foreground">{mainProduct.title}</h3>
+            <div className="flex flex-1 flex-col gap-1.5 p-4">
+              <h3 className="line-clamp-2 text-sm font-semibold text-foreground">{mainProduct.title}</h3>
               <div className="flex items-center gap-1 text-xs">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(mainProduct.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
@@ -85,10 +124,10 @@ function HomePage() {
                 <span className="text-muted-foreground">({mainProduct.ratingCount.toLocaleString()})</span>
               </div>
               <div className="mt-auto flex items-baseline gap-2">
-                <span className="font-display text-xl font-bold text-primary">₹{mainProduct.price}</span>
-                <span className="text-xs text-muted-foreground line-through">₹{mainProduct.oldPrice}</span>
+                <span className="font-display text-xl font-bold text-primary">${mainProduct.price}</span>
+                <span className="text-xs text-muted-foreground line-through">${mainProduct.oldPrice}</span>
               </div>
-              <span className="text-xs font-semibold text-[var(--success)]">In stock</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-[var(--success)]">In stock · Ships today</span>
             </div>
           </Link>
 
@@ -100,6 +139,8 @@ function HomePage() {
       </section>
 
       <Footer />
+
+      <style>{`@keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }`}</style>
     </div>
   );
 }
@@ -109,21 +150,25 @@ function SoldOutCard({ product }: { product: { id: string; title: string; price:
     <button
       type="button"
       onClick={(e) => e.preventDefault()}
-      className="group relative flex cursor-not-allowed flex-col overflow-hidden rounded-xl border bg-card text-left shadow-[var(--shadow-soft)] opacity-90"
+      className="group relative flex cursor-not-allowed flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-soft)]"
     >
-      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-[var(--accent)] to-secondary">
-        <div className="flex h-full w-full items-center justify-center text-7xl grayscale">{product.emoji}</div>
-        <div className="absolute inset-0 bg-foreground/40 backdrop-blur-[1px]" />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md bg-destructive px-3 py-1 text-xs font-bold uppercase tracking-wider text-destructive-foreground">
-          Sold Out
-        </span>
-      </div>
-      <div className="flex flex-1 flex-col gap-1.5 p-3">
-        <h3 className="line-clamp-2 text-sm font-medium text-foreground">{product.title}</h3>
-        <div className="mt-auto flex items-baseline gap-2">
-          <span className="font-display text-xl font-bold text-muted-foreground line-through">₹{product.price}</span>
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-secondary via-white to-[var(--accent)]/40">
+        <div className="flex h-full w-full items-center justify-center text-7xl opacity-30">{product.emoji}</div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--primary-deep)]/30 to-transparent" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+          <Sparkles className="mx-auto h-5 w-5 text-[var(--gold)]" />
+          <div className="mt-1 rounded-full border border-[var(--primary-deep)]/20 bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary-deep)] backdrop-blur">
+            Sold Out
+          </div>
+          <div className="mt-1.5 text-[10px] font-medium uppercase tracking-wider text-white drop-shadow">Restocking soon</div>
         </div>
-        <span className="text-xs font-semibold text-destructive">Currently unavailable</span>
+      </div>
+      <div className="flex flex-1 flex-col gap-1.5 p-4">
+        <h3 className="line-clamp-2 text-sm font-semibold text-foreground/70">{product.title}</h3>
+        <div className="mt-auto flex items-baseline gap-2">
+          <span className="font-display text-lg font-semibold text-muted-foreground">${product.price}</span>
+        </div>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Notify when back</span>
       </div>
     </button>
   );
