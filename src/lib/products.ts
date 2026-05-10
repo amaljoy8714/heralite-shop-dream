@@ -24,8 +24,8 @@ export const mainProduct: Product = {
   id: "cloud-rain-humidifier",
   title: "HeraLiite Cloud Rain Humidifier — Mushroom Aroma Diffuser with 7-Color RGB Night Light",
   brand: "HeraLiite",
-  price: 1499,
-  oldPrice: 3499,
+  price: 24.99,
+  oldPrice: 49.99,
   rating: 4.6,
   ratingCount: 2438,
   images: [img1, img2, img3, img4],
@@ -34,7 +34,7 @@ export const mainProduct: Product = {
   bullets: [
     "Calming raindrop sound — perfect for sleep, focus & meditation",
     "7-color RGB ambient mood lighting with smooth gradient mode",
-    "230ml ultrasonic cool mist — quiet under 30 dB",
+    "230ml ultrasonic cool mist — whisper quiet under 30 dB",
     "Auto shut-off when water runs low (safety protection)",
     "USB-C powered • Wood-grain base • Premium ABS body",
   ],
@@ -49,22 +49,24 @@ export const mainProduct: Product = {
     { label: "Noise level", value: "< 30 dB" },
   ],
   reviews: [
-    { name: "Aisha K.", rating: 5, date: "12 Apr 2026", title: "Helps me sleep so well", body: "The rain sound is genuinely calming and the purple light is so pretty. Whole bedroom feels like a spa now." },
-    { name: "Rohit S.", rating: 5, date: "03 Apr 2026", title: "Beautiful build quality", body: "Wood base looks premium. Mist is fine and silent. Worth every rupee." },
-    { name: "Maya P.", rating: 4, date: "27 Mar 2026", title: "Lovely mood light", body: "Great gift item. Slightly small tank but otherwise perfect." },
-    { name: "Dev N.", rating: 5, date: "15 Mar 2026", title: "My kids love it", body: "Acts as a night light + humidifier. Very peaceful raindrop sound." },
+    { name: "Aisha K.", rating: 5, date: "Apr 12, 2026", title: "Helps me sleep so well", body: "The rain sound is genuinely calming and the purple light is so pretty. My whole bedroom feels like a spa now." },
+    { name: "Ryan S.", rating: 5, date: "Apr 03, 2026", title: "Beautiful build quality", body: "Wood base looks premium. Mist is fine and silent. Worth every dollar." },
+    { name: "Maya P.", rating: 4, date: "Mar 27, 2026", title: "Lovely mood light", body: "Great gift item. Slightly small tank but otherwise perfect." },
+    { name: "Devon N.", rating: 5, date: "Mar 15, 2026", title: "My kids love it", body: "Acts as a night light + humidifier. Very peaceful raindrop sound." },
   ],
 };
+
+export const BUNDLE_DISCOUNT = 0.15; // 15% off when buying 2+ of main product
 
 export type SoldOutProduct = { id: string; title: string; price: number; oldPrice: number; emoji: string };
 
 export const soldOutProducts: SoldOutProduct[] = [
-  { id: "s1", title: "Galaxy Star Projector Lamp", price: 1299, oldPrice: 2499, emoji: "🌌" },
-  { id: "s2", title: "Sunset Ambient Floor Lamp", price: 1899, oldPrice: 3299, emoji: "🌅" },
-  { id: "s3", title: "Crystal Salt Night Lamp", price: 899, oldPrice: 1799, emoji: "🧂" },
-  { id: "s4", title: "Moon Levitating Light", price: 2499, oldPrice: 4999, emoji: "🌙" },
-  { id: "s5", title: "Volcano Mist Diffuser", price: 1599, oldPrice: 2999, emoji: "🌋" },
-  { id: "s6", title: "Aurora LED Strip Pro", price: 999, oldPrice: 1999, emoji: "✨" },
-  { id: "s7", title: "Zen Garden Aroma Stone", price: 1199, oldPrice: 2399, emoji: "🪨" },
-  { id: "s8", title: "Forest Rain Sleep Speaker", price: 1799, oldPrice: 3499, emoji: "🌲" },
+  { id: "s1", title: "Galaxy Star Projector Lamp", price: 21.99, oldPrice: 42.99, emoji: "🌌" },
+  { id: "s2", title: "Sunset Ambient Floor Lamp", price: 32.99, oldPrice: 64.99, emoji: "🌅" },
+  { id: "s3", title: "Crystal Salt Night Lamp", price: 15.99, oldPrice: 31.99, emoji: "🧂" },
+  { id: "s4", title: "Moon Levitating Light", price: 39.99, oldPrice: 79.99, emoji: "🌙" },
+  { id: "s5", title: "Volcano Mist Diffuser", price: 27.99, oldPrice: 54.99, emoji: "🌋" },
+  { id: "s6", title: "Aurora LED Strip Pro", price: 17.99, oldPrice: 35.99, emoji: "✨" },
+  { id: "s7", title: "Zen Garden Aroma Stone", price: 19.99, oldPrice: 39.99, emoji: "🪨" },
+  { id: "s8", title: "Forest Rain Sleep Speaker", price: 29.99, oldPrice: 59.99, emoji: "🌲" },
 ];

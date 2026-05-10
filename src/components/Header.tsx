@@ -1,66 +1,49 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, Search, MapPin } from "lucide-react";
+import { ShoppingCart, MapPin } from "lucide-react";
 import { useCart, cartCount } from "@/lib/cart";
-import logo from "@/assets/heralite-logo.jpg";
 
 export function Header() {
   const items = useCart((s) => s.items);
   const count = cartCount(items);
 
   return (
-    <header className="sticky top-0 z-40">
-      <div className="bg-[var(--primary-deep)] text-white">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-2 md:gap-5 md:px-6 md:py-3">
-          <Link to="/" className="flex shrink-0 items-center gap-2">
-            <img src={logo} alt="HeraLiite logo" className="h-11 w-11 rounded-full bg-white object-contain p-0.5" />
-            <div className="leading-tight">
-              <div className="font-display text-xl font-bold tracking-tight">Hera<span className="text-[oklch(0.78_0.15_295)]">Liite</span></div>
-              <div className="hidden text-[10px] font-medium uppercase tracking-[0.2em] text-white/60 md:block">Light · Life · Balance</div>
-            </div>
-          </Link>
-
-          <div className="hidden items-center gap-1 text-xs lg:flex">
-            <MapPin className="h-4 w-4" />
-            <div className="leading-tight">
-              <div className="text-white/60">Deliver to</div>
-              <div className="font-semibold">India 110001</div>
-            </div>
+    <header className="sticky top-0 z-40 border-b border-border bg-white">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 md:gap-6 md:px-6 md:py-4">
+        <Link to="/" className="flex shrink-0 items-center">
+          <div className="font-display text-2xl font-bold leading-none tracking-tight md:text-3xl">
+            <span className="text-[var(--primary-deep)]">Hera</span>
+            <span className="text-primary">Liite</span>
+            <span className="ml-0.5 text-[var(--gold)]">✦</span>
           </div>
+        </Link>
 
-          <div className="flex flex-1 items-center overflow-hidden rounded-md bg-white">
-            <input
-              className="h-10 flex-1 bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-              placeholder="Search HeraLiite — light, life, balance"
-            />
-            <button className="flex h-10 items-center justify-center bg-[var(--gold)] px-4 text-[var(--primary-deep)] hover:brightness-95">
-              <Search className="h-5 w-5" />
-            </button>
+        <div className="ml-auto hidden items-center gap-1.5 text-xs text-muted-foreground lg:flex">
+          <MapPin className="h-4 w-4 text-primary" />
+          <div className="leading-tight">
+            <div className="text-[10px] uppercase tracking-wider">Ship to</div>
+            <div className="font-semibold text-foreground">United States</div>
           </div>
+        </div>
 
-          <Link to="/checkout" className="relative flex items-center gap-2 rounded-md px-2 py-1 hover:bg-white/10">
-            <div className="relative">
-              <ShoppingCart className="h-7 w-7" />
-              {count > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--gold)] px-1 text-xs font-bold text-[var(--primary-deep)]">
-                  {count}
-                </span>
-              )}
-            </div>
-            <span className="hidden text-sm font-semibold md:inline">Cart</span>
-          </Link>
+        <Link to="/checkout" className="relative ml-auto flex items-center gap-2 rounded-md px-3 py-2 hover:bg-secondary lg:ml-6">
+          <div className="relative">
+            <ShoppingCart className="h-6 w-6 text-[var(--primary-deep)]" />
+            {count > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                {count}
+              </span>
+            )}
+          </div>
+          <span className="hidden text-sm font-semibold text-[var(--primary-deep)] md:inline">Cart</span>
+        </Link>
+      </div>
+      <div className="border-t border-border bg-secondary/40">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--primary-deep)] md:px-6">
+          <span className="text-[var(--gold)]">✦</span>
+          <span>Light · Life · Balance</span>
+          <span className="text-[var(--gold)]">✦</span>
         </div>
       </div>
-      <nav className="bg-primary text-primary-foreground">
-        <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-3 py-2 text-sm md:px-6">
-          <span className="font-semibold">All</span>
-          <span className="opacity-90 hover:opacity-100">Today's Deals</span>
-          <span className="opacity-90 hover:opacity-100">Mood Lights</span>
-          <span className="opacity-90 hover:opacity-100">Humidifiers</span>
-          <span className="opacity-90 hover:opacity-100">Sleep & Wellness</span>
-          <span className="opacity-90 hover:opacity-100">Gifts</span>
-          <span className="opacity-90 hover:opacity-100">Customer Service</span>
-        </div>
-      </nav>
     </header>
   );
 }
