@@ -1,7 +1,6 @@
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -36,6 +35,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "HeraLiite — Light. Life. Balance." },
       { name: "description", content: "HeraLiite mood-lighting and wellness store. Premium humidifiers, diffusers and ambient lights for the modern home." },
+      { property: "og:title", content: "HeraLiite — Light. Life. Balance." },
+      { name: "twitter:title", content: "HeraLiite — Light. Life. Balance." },
+      { property: "og:description", content: "HeraLiite mood-lighting and wellness store. Premium humidifiers, diffusers and ambient lights for the modern home." },
+      { name: "twitter:description", content: "HeraLiite mood-lighting and wellness store. Premium humidifiers, diffusers and ambient lights for the modern home." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0025255a-dd33-4d4a-843f-a78088ea35cd/id-preview-7351736c--aff41bf4-2eaf-46ab-bc8d-08a36435c6fb.lovable.app-1778418203629.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0025255a-dd33-4d4a-843f-a78088ea35cd/id-preview-7351736c--aff41bf4-2eaf-46ab-bc8d-08a36435c6fb.lovable.app-1778418203629.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -64,7 +71,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );
 }
