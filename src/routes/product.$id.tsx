@@ -14,9 +14,8 @@ export const Route = createFileRoute("/product/$id")({
       { property: "og:image", content: mainProduct.images[0] },
     ],
   }),
-  loader: ({ params }): { product: Product } => {
+  beforeLoad: ({ params }) => {
     if (params.id !== mainProduct.id) throw notFound();
-    return { product: mainProduct };
   },
   component: ProductPage,
   notFoundComponent: () => (
@@ -28,7 +27,7 @@ export const Route = createFileRoute("/product/$id")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const product: Product = mainProduct;
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<"desc" | "specs" | "reviews">("desc");
