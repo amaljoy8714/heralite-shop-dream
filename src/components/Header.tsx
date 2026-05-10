@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingCart, Search, MapPin } from "lucide-react";
 import { useCart, cartCount } from "@/lib/cart";
 import logo from "@/assets/heralite-logo.jpg";
-import wordmark from "@/assets/heralite-wordmark.jpg";
 
 export function Header() {
   const items = useCart((s) => s.items);
@@ -13,9 +12,11 @@ export function Header() {
       <div className="bg-[var(--primary-deep)] text-white">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-2 md:gap-5 md:px-6 md:py-3">
           <Link to="/" className="flex shrink-0 items-center gap-2">
-            <img src={logo} alt="HeraLiite logo" className="h-10 w-10 rounded-full bg-white object-contain p-0.5" />
-            <img src={wordmark} alt="HeraLiite" className="hidden h-8 brightness-0 invert md:block" style={{ filter: "brightness(0) invert(1)" }} />
-            <span className="font-display text-xl font-bold md:hidden">HeraLiite</span>
+            <img src={logo} alt="HeraLiite logo" className="h-11 w-11 rounded-full bg-white object-contain p-0.5" />
+            <div className="leading-tight">
+              <div className="font-display text-xl font-bold tracking-tight">Hera<span className="text-[oklch(0.78_0.15_295)]">Liite</span></div>
+              <div className="hidden text-[10px] font-medium uppercase tracking-[0.2em] text-white/60 md:block">Light · Life · Balance</div>
+            </div>
           </Link>
 
           <div className="hidden items-center gap-1 text-xs lg:flex">
