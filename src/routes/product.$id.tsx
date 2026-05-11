@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown } from "lucide-react";
+import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/product/$id")({
   head: () => ({
     meta: [
-      { title: `${mainProduct.title} | HeraLiite` },
+      { title: `${mainProduct.title} | HeraLite` },
       { name: "description", content: mainProduct.description },
       { property: "og:image", content: mainProduct.images[0] },
     ],
@@ -27,14 +27,22 @@ export const Route = createFileRoute("/product/$id")({
   ),
 });
 
+const faqs = [
+  { q: "How long does the water last?", a: "The 230ml tank runs for 6–8 hours on a full fill — perfect for a full night’s sleep." },
+  { q: "Can I use essential oils?", a: "Yes! Add a few drops to the water for an aromatherapy experience." },
+  { q: "Is the rain sound loud?", a: "No — it operates under 30 dB, quieter than a whisper." },
+  { q: "What’s included in the box?", a: "1× HeraLite Cloud Rain Humidifier, 1× USB-C cable, and a quick-start guide." },
+  { q: "What if I’m not happy with my order?", a: "We offer a hassle-free 30-day return policy. Contact us and we’ll make it right." },
+];
+
 function ProductPage() {
   const product: Product = mainProduct;
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [bundle, setBundle] = useState<1 | 2 | 3>(1);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const add = useCart((s) => s.add);
   const navigate = useNavigate();
-  const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
 
   const bundleQty = bundle;
   const baseTotal = product.price * bundleQty;
@@ -100,18 +108,16 @@ function ProductPage() {
                 <Star key={i} className={`h-4 w-4 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
               ))}
             </div>
-            <a href="#reviews" className="text-primary hover:underline">{product.rating} · {product.ratingCount.toLocaleString()} ratings</a>
+            <a href="#reviews" className="text-primary hover:underline">{product.rating} · Read reviews</a>
           </div>
 
           <hr className="my-4" />
 
           <div className="flex items-baseline gap-3">
-            <span className="rounded bg-destructive px-1.5 py-0.5 text-xs font-bold text-destructive-foreground">-{discount}%</span>
             <span className="font-display text-4xl font-bold text-primary">${product.price}</span>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            Was: <span className="line-through">${product.oldPrice}</span>
-            <span className="ml-2 text-foreground">FREE US shipping</span>
+            <span className="rounded-full bg-[var(--success)]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--success)]">
+              Free Shipping Included
+            </span>
           </div>
 
           <ul className="mt-5 space-y-2 text-sm">
@@ -164,9 +170,9 @@ function ProductPage() {
               <div className="text-xs font-semibold text-[var(--success)]">Bundle saving applied</div>
             )}
             <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-              <Truck className="h-4 w-4 text-primary" /> FREE delivery <span className="font-semibold text-foreground">2–5 business days</span>
+              <Truck className="h-4 w-4 text-primary" /> FREE delivery <span className="font-semibold text-foreground">3–7 business days</span>
             </div>
-            <div className="mt-1 text-sm font-bold text-[var(--success)]">In stock · Ships from US warehouse</div>
+            <div className="mt-1 text-sm font-bold text-[var(--success)]">In stock · Ships within 1 business day</div>
 
             {bundle === 1 && (
               <div className="mt-4 flex items-center gap-3">
@@ -186,16 +192,32 @@ function ProductPage() {
               Buy Now
             </button>
 
-            <ul className="mt-5 space-y-2 text-xs text-muted-foreground">
+            {/* Trust row */}
+            <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4 text-center">
+              <div className="flex flex-col items-center gap-1">
+                <Lock className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Secure<br/>Checkout</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <Truck className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free US<br/>Shipping</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <Undo2 className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">30-Day<br/>Returns</span>
+              </div>
+            </div>
+
+            <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
               <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary" /> Secure transaction</li>
               <li className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-primary" /> 30-day returns</li>
-              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> Free US shipping</li>
+              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE US shipping</li>
             </ul>
           </div>
         </aside>
       </div>
 
-      {/* Description (Amazon-style stacked) */}
+      {/* Description */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
         <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Product description</h2>
@@ -224,7 +246,41 @@ function ProductPage() {
         </div>
       </section>
 
-      {/* Reviews — placed after description, Amazon-style */}
+      {/* Why HeraLite */}
+      <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
+        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-accent/40 via-white to-secondary/40 p-8 md:p-12 shadow-[var(--shadow-soft)]">
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">Our promise</span>
+          <h2 className="mt-2 font-display text-2xl font-bold md:text-3xl">Why HeraLite?</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            We believe your space should feel as good as it looks. Every HeraLite product is designed to bring calm, light, and balance into your everyday life.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
+        <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">Frequently asked questions</h2>
+          <div className="mt-6 divide-y">
+            {faqs.map((f, i) => (
+              <div key={i}>
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold hover:text-primary"
+                >
+                  <span>{f.q}</span>
+                  <span className="ml-4 text-xl text-primary">{openFaq === i ? "−" : "+"}</span>
+                </button>
+                {openFaq === i && (
+                  <p className="pb-4 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews */}
       <section id="reviews" className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
         <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Customer reviews</h2>
@@ -236,7 +292,7 @@ function ProductPage() {
                   <Star key={i} className={`h-5 w-5 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
                 ))}
               </div>
-              <div className="mt-1 text-sm text-muted-foreground">{product.ratingCount.toLocaleString()} global ratings</div>
+              <div className="mt-1 text-sm text-muted-foreground">Loved by customers</div>
             </div>
             <div className="space-y-5 md:col-span-2">
               {product.reviews.map((r, i) => (

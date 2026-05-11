@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight } from "lucide-react";
+import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight, Copy, PackageSearch } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useCart, cartTotal } from "@/lib/cart";
 import { mainProduct, BUNDLE_DISCOUNT } from "@/lib/products";
+import { useOrders, generateTrackingNumber } from "@/lib/orders";
+import { toast } from "sonner";
 
 const searchSchema = z.object({
   step: z.enum(["cart", "address", "payment"]).optional(),
@@ -14,8 +16,8 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Checkout · HeraLiite" },
-      { name: "description", content: "Secure checkout for your HeraLiite order." },
+      { title: "Checkout · HeraLite" },
+      { name: "description", content: "Secure checkout for your HeraLite order." },
     ],
   }),
   validateSearch: searchSchema,
@@ -43,9 +45,11 @@ function CheckoutPage() {
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
   const clear = useCart((s) => s.clear);
+  const addOrder = useOrders((s) => s.add);
   const navigate = useNavigate();
 
   const [step, setStep] = useState<Step>(initial);
+  const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [form, setForm] = useState<AddressForm>({ name: "", phone: "", email: "", address: "", city: "", state: "", zip: "" });
   const [errors, setErrors] = useState<Partial<Record<keyof AddressForm, string>>>({});
@@ -75,13 +79,43 @@ function CheckoutPage() {
   };
 
   const placeOrder = () => {
-    setOrderId("HL" + Date.now().toString().slice(-8));
+    const tn = generateTrackingNumber();
+    const oid = "HL" + Date.now().toString().slice(-8);
+    const now = Date.now();
+    addOrder({
+      trackingNumber: tn,
+      orderId: oid,
+      customerName: form.name,
+      email: form.email,
+      address: form.address,
+      city: form.city,
+      state: form.state,
+      zip: form.zip,
+      items: items.map((i) => ({ title: i.title, qty: i.qty, price: i.price, image: i.image })),
+      total,
+      placedAt: now,
+      status: "Placed",
+      timeline: [{ status: "Placed", at: now }],
+      estimatedDelivery: "3–7 business days",
+    });
+    setTrackingNumber(tn);
+    setOrderId(oid);
     clear();
     setStep("confirm");
   };
 
+  const copyTracking = async () => {
+    if (!trackingNumber) return;
+    try {
+      await navigator.clipboard.writeText(trackingNumber);
+      toast.success("Tracking number copied!");
+    } catch {
+      toast.error("Copy failed — please copy manually");
+    }
+  };
+
   // CONFIRM
-  if (step === "confirm" && orderId) {
+  if (step === "confirm" && orderId && trackingNumber) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -91,11 +125,40 @@ function CheckoutPage() {
           </div>
           <h1 className="mt-6 font-display text-4xl font-bold">Order placed!</h1>
           <p className="mt-2 text-muted-foreground">Thank you {form.name}, your order has been confirmed.</p>
+
+          {/* Tracking number card */}
+          <div className="mt-6 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-accent/40 via-white to-secondary/30 p-6 text-left shadow-[var(--shadow-card)]">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              <PackageSearch className="h-4 w-4" /> Your tracking number
+            </div>
+            <div className="mt-3 flex items-center gap-3">
+              <code className="flex-1 break-all rounded-lg bg-white px-4 py-3 font-mono text-lg font-bold text-[var(--primary-deep)] shadow-inner">
+                {trackingNumber}
+              </code>
+              <button
+                onClick={copyTracking}
+                className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-3 text-xs font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110"
+              >
+                <Copy className="h-4 w-4" /> Copy
+              </button>
+            </div>
+            <p className="mt-3 rounded-md bg-[var(--gold)]/15 px-3 py-2 text-xs font-semibold text-[var(--primary-deep)]">
+              ⚠️ Please save this number — you’ll need it to track your order on our Track Order page.
+            </p>
+            <Link
+              to="/track"
+              search={{ tn: trackingNumber }}
+              className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+            >
+              Track this order now <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
           <div className="mt-6 rounded-xl border bg-card p-5 text-left shadow-[var(--shadow-soft)]">
             <Row label="Order ID" value={orderId} mono />
             <Row label="Total paid" value={`$${total.toFixed(2)}`} />
             <Row label="Shipping to" value={`${form.address}, ${form.city}, ${form.state} ${form.zip}`} />
-            <Row label="Estimated delivery" value="2–5 business days" />
+            <Row label="Estimated delivery" value="3–7 business days" />
           </div>
           <Link to="/" className="mt-8 inline-block rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">Continue Shopping</Link>
         </div>
@@ -118,6 +181,8 @@ function CheckoutPage() {
       </div>
     );
   }
+
+  const showInvoice = step === "cart";
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,8 +208,8 @@ function CheckoutPage() {
           })}
         </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
+        <div className={`mt-6 grid gap-6 ${showInvoice ? "lg:grid-cols-3" : ""}`}>
+          <div className={`space-y-6 ${showInvoice ? "lg:col-span-2" : ""}`}>
             {/* CART */}
             {step === "cart" && (
               <div className="rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)]">
@@ -190,7 +255,7 @@ function CheckoutPage() {
             {step === "address" && (
               <form onSubmit={submitAddress} className="rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)]">
                 <h2 className="font-display text-xl font-bold">Shipping address</h2>
-                <p className="text-xs text-muted-foreground">We currently ship across the United States.</p>
+                <p className="text-xs text-muted-foreground">We currently ship across the United States. FREE shipping on every order.</p>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   {([
                     ["name", "Full name", "text"],
@@ -255,6 +320,16 @@ function CheckoutPage() {
                   </div>
                 )}
 
+                {bundleSavings > 0 && (
+                  <div className="mt-4 flex items-center gap-3 rounded-lg border-2 border-dashed border-[var(--gold)] bg-[var(--gold)]/10 p-4">
+                    <Crown className="h-5 w-5 text-[var(--gold)]" />
+                    <div className="flex-1 text-sm">
+                      <div className="font-bold text-[var(--primary-deep)]">Bundle offer applied</div>
+                      <div className="text-xs text-muted-foreground">15% off — saving ${bundleSavings.toFixed(2)}</div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-4 flex items-center gap-2 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
                   <Lock className="h-4 w-4 text-primary" /> Your payment information is encrypted and secure.
                 </div>
@@ -268,37 +343,37 @@ function CheckoutPage() {
             )}
           </div>
 
-          {/* Summary / Invoice */}
-          <aside className="lg:col-span-1">
-            <div className="sticky top-32 rounded-xl border bg-card p-6 shadow-[var(--shadow-card)]">
-              <h2 className="font-display text-xl font-bold">Invoice</h2>
-              <div className="mt-4 space-y-2 text-sm">
-                <Row label={`Subtotal (${items.reduce((a, i) => a + i.qty, 0)} items)`} value={`$${subtotal.toFixed(2)}`} />
-                {bundleSavings > 0 && (
-                  <Row label="Bundle offer (-15%)" value={`-$${bundleSavings.toFixed(2)}`} accent />
-                )}
-                <Row label="Shipping" value="FREE" />
-                <Row label="Tax (7%)" value={`$${tax.toFixed(2)}`} />
-              </div>
-              <hr className="my-4" />
-              <div className="flex justify-between font-display text-lg font-bold">
-                <span>Total</span><span className="text-primary">${total.toFixed(2)}</span>
-              </div>
+          {/* Invoice only on cart step */}
+          {showInvoice && (
+            <aside className="lg:col-span-1">
+              <div className="sticky top-32 rounded-xl border bg-card p-6 shadow-[var(--shadow-card)]">
+                <h2 className="font-display text-xl font-bold">Invoice</h2>
+                <div className="mt-4 space-y-2 text-sm">
+                  <Row label={`Subtotal (${items.reduce((a, i) => a + i.qty, 0)} items)`} value={`$${subtotal.toFixed(2)}`} />
+                  {bundleSavings > 0 && (
+                    <Row label="Bundle offer (-15%)" value={`-$${bundleSavings.toFixed(2)}`} accent />
+                  )}
+                  <Row label="Shipping" value="FREE" />
+                  <Row label="Tax (7%)" value={`$${tax.toFixed(2)}`} />
+                </div>
+                <hr className="my-4" />
+                <div className="flex justify-between font-display text-lg font-bold">
+                  <span>Total</span><span className="text-primary">${total.toFixed(2)}</span>
+                </div>
 
-              {step === "cart" && (
                 <button
                   onClick={() => { setStep("address"); navigate({ to: "/checkout", search: { step: "address" } }); }}
                   className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110"
                 >
                   Proceed to Buy <ArrowRight className="h-4 w-4" />
                 </button>
-              )}
 
-              <div className="mt-4 flex items-center gap-2 rounded-md bg-accent/40 p-3 text-xs">
-                <ShieldCheck className="h-4 w-4 text-primary" /> Secure SSL encrypted checkout
+                <div className="mt-4 flex items-center gap-2 rounded-md bg-accent/40 p-3 text-xs">
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Secure SSL encrypted checkout
+                </div>
               </div>
-            </div>
-          </aside>
+            </aside>
+          )}
         </div>
       </div>
       <Footer />

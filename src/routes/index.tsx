@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Star, Truck, ShieldCheck, Sparkles, Crown } from "lucide-react";
+import { Star, Truck, ShieldCheck, Sparkles } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
@@ -7,8 +7,8 @@ import { mainProduct, soldOutProducts } from "@/lib/products";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HeraLiite — Premium Mood Lighting & Cloud Rain Humidifier" },
-      { name: "description", content: "Shop the HeraLiite Cloud Rain Humidifier — premium mood-lighting and wellness, shipped across the United States. Light. Life. Balance." },
+      { title: "HeraLite — Premium Mood Lighting & Cloud Rain Humidifier" },
+      { name: "description", content: "Shop the HeraLite Cloud Rain Humidifier — premium mood-lighting and wellness, shipped FREE across the United States. Light. Life. Balance." },
     ],
   }),
   component: HomePage,
@@ -16,15 +16,18 @@ export const Route = createFileRoute("/")({
 
 const offerStrip = [
   "✦ FREE US Shipping on every order",
-  "✦ 50% Off Today — Limited stock",
+  "✦ 50% Off — Limited stock",
   "✦ Bundle 2 → Extra 15% Off",
   "✦ 30-day money-back guarantee",
+  "✦ FREE shipping across the United States",
 ];
 
 function HomePage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Premium offer marquee */}
+      <Header />
+
+      {/* Premium offer marquee — moved to right under header */}
       <div className="overflow-hidden bg-[var(--primary-deep)] py-2 text-white">
         <div className="flex animate-[scroll_30s_linear_infinite] gap-12 whitespace-nowrap text-xs font-semibold tracking-wider">
           {[...offerStrip, ...offerStrip, ...offerStrip].map((t, i) => (
@@ -33,16 +36,11 @@ function HomePage() {
         </div>
       </div>
 
-      <Header />
-
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border" style={{ background: "var(--gradient-hero)" }}>
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-14 md:grid-cols-2 md:py-24">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/80 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-primary backdrop-blur">
-              <Crown className="h-3.5 w-3.5" /> Premium Wellness · Bestseller
-            </span>
-            <h1 className="mt-5 font-display text-5xl font-bold leading-[0.95] tracking-tight text-[var(--primary-deep)] md:text-7xl">
+            <h1 className="font-display text-5xl font-bold leading-[0.95] tracking-tight text-[var(--primary-deep)] md:text-7xl">
               Light. Life.<br />
               <span className="text-primary">Balance.</span>
             </h1>
@@ -58,7 +56,7 @@ function HomePage() {
               </a>
             </div>
             <div className="mt-8 flex flex-wrap gap-5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> Free US shipping</span>
+              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> FREE US shipping</span>
               <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-primary" /> 30-day returns</span>
               <span className="flex items-center gap-1.5"><Star className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" /> 4.6 / 2,400+ reviews</span>
             </div>
@@ -66,8 +64,8 @@ function HomePage() {
           <div className="relative">
             <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-primary/25 blur-3xl" />
             <div className="absolute right-4 top-4 z-10 rotate-3 rounded-full bg-[var(--gold)] px-4 py-3 text-center font-display font-bold leading-none text-[var(--primary-deep)] shadow-lg">
-              <div className="text-[10px] uppercase tracking-widest">Today</div>
               <div className="text-2xl">50% OFF</div>
+              <div className="mt-1 text-[10px] uppercase tracking-widest">Free Shipping</div>
             </div>
             <img src={mainProduct.images[0]} alt={mainProduct.title} className="mx-auto aspect-square w-full max-w-lg rounded-3xl border border-white/40 object-cover shadow-[var(--shadow-glow)]" />
           </div>
@@ -78,7 +76,7 @@ function HomePage() {
       <section className="border-b border-border bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-6 py-6 text-center md:grid-cols-4">
           {[
-            ["Free US Shipping", "On every order"],
+            ["FREE US Shipping", "On every order"],
             ["30-Day Returns", "Hassle-free"],
             ["Premium Quality", "Hand inspected"],
             ["Secure Checkout", "256-bit SSL"],
@@ -121,13 +119,12 @@ function HomePage() {
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(mainProduct.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
                 ))}
-                <span className="text-muted-foreground">({mainProduct.ratingCount.toLocaleString()})</span>
+                <span className="text-muted-foreground">{mainProduct.rating}</span>
               </div>
               <div className="mt-auto flex items-baseline gap-2">
                 <span className="font-display text-xl font-bold text-primary">${mainProduct.price}</span>
-                <span className="text-xs text-muted-foreground line-through">${mainProduct.oldPrice}</span>
               </div>
-              <span className="text-xs font-bold uppercase tracking-wide text-[var(--success)]">In stock · Ships today</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-[var(--success)]">In stock · FREE shipping</span>
             </div>
           </Link>
 

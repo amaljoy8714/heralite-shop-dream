@@ -42,7 +42,7 @@ export const useCart = create<CartState>()(
         })),
       clear: () => set({ items: [] }),
     }),
-    { name: "heraliite-cart" }
+    { name: "heralite-cart" }
   )
 );
 

@@ -22,8 +22,8 @@ export type Product = {
 
 export const mainProduct: Product = {
   id: "cloud-rain-humidifier",
-  title: "HeraLiite Cloud Rain Humidifier — Mushroom Aroma Diffuser with 7-Color RGB Night Light",
-  brand: "HeraLiite",
+  title: "HeraLite Cloud Rain Humidifier — Sleep & Wellness Diffuser",
+  brand: "HeraLite",
   price: 24.99,
   oldPrice: 49.99,
   rating: 4.6,
@@ -39,7 +39,7 @@ export const mainProduct: Product = {
     "USB-C powered • Wood-grain base • Premium ABS body",
   ],
   description:
-    "Transform any room into a calm sanctuary. The HeraLiite Cloud Rain Humidifier mimics the soothing sound of falling rain while diffusing a fine, cool mist into the air. Pair it with the built-in 7-color RGB night light for a dreamy ambience that helps you sleep, study or unwind.",
+    "Transform any room into a calm sanctuary. The HeraLite Cloud Rain Humidifier mimics the soothing sound of falling rain while diffusing a fine, cool mist into the air. Pair it with the built-in 7-color RGB night light for a dreamy ambience that helps you sleep, study or unwind.",
   specs: [
     { label: "Capacity", value: "230 ml" },
     { label: "Power", value: "USB-C, 5V / 1A" },
