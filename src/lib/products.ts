@@ -39,7 +39,7 @@ export const mainProduct: Product = {
     "USB-C powered • Wood-grain base • Premium ABS body",
   ],
   description:
-    "Transform any room into a calm sanctuary. The HeraLiite Cloud Rain Humidifier mimics the soothing sound of falling rain while diffusing a fine, cool mist into the air. Pair it with the built-in 7-color RGB night light for a dreamy ambience that helps you sleep, study or unwind.",
+    "Transform any room into a calm sanctuary. The HeraLite Cloud Rain Humidifier mimics the soothing sound of falling rain while diffusing a fine, cool mist into the air. Pair it with the built-in 7-color RGB night light for a dreamy ambience that helps you sleep, study or unwind.",
   specs: [
     { label: "Capacity", value: "230 ml" },
     { label: "Power", value: "USB-C, 5V / 1A" },
