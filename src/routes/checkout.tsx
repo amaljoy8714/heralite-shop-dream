@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight, Copy, PackageSearch } from "lucide-react";
+import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight, Copy, PackageSearch, Download } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useCart, cartTotal } from "@/lib/cart";
 import { mainProduct, BUNDLE_DISCOUNT } from "@/lib/products";
-import { useOrders, generateTrackingNumber } from "@/lib/orders";
+import { useOrders, generateTrackingNumber, type Order } from "@/lib/orders";
+import { downloadInvoicePdf } from "@/lib/invoice";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
@@ -82,7 +83,7 @@ function CheckoutPage() {
     const tn = generateTrackingNumber();
     const oid = "HL" + Date.now().toString().slice(-8);
     const now = Date.now();
-    addOrder({
+    const order: Order = {
       trackingNumber: tn,
       orderId: oid,
       customerName: form.name,
@@ -97,11 +98,24 @@ function CheckoutPage() {
       status: "Placed",
       timeline: [{ status: "Placed", at: now }],
       estimatedDelivery: "3–7 business days",
-    });
+    };
+    addOrder(order);
     setTrackingNumber(tn);
     setOrderId(oid);
     clear();
     setStep("confirm");
+  };
+
+  const downloadInvoice = () => {
+    if (!trackingNumber || !orderId) return;
+    const order = useOrders.getState().get(trackingNumber);
+    if (!order) return;
+    try {
+      downloadInvoicePdf(order);
+      toast.success("Invoice downloaded");
+    } catch {
+      toast.error("Could not generate invoice");
+    }
   };
 
   const copyTracking = async () => {
