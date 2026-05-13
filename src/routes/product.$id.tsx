@@ -126,11 +126,16 @@ function ProductPage() {
             ))}
           </ul>
 
-          {/* Bundle picker */}
-          <div className="mt-6">
-            <div className="mb-2 flex items-center gap-2">
-              <Crown className="h-4 w-4 text-[var(--gold)]" />
-              <span className="text-sm font-bold uppercase tracking-wider">Bundle & save</span>
+          {/* Bundle picker — premium */}
+          <div className="mt-7 rounded-2xl border border-[var(--gold)]/40 bg-gradient-to-br from-[var(--gold)]/8 via-white to-accent/20 p-4 shadow-[0_8px_30px_-12px_oklch(0.62_0.22_295/0.25)]">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[var(--gold)] to-[oklch(0.7_0.16_70)] shadow-[0_4px_10px_-2px_oklch(0.78_0.14_80/0.6)]">
+                  <Crown className="h-3.5 w-3.5 text-[var(--primary-deep)]" />
+                </span>
+                <span className="font-display text-base font-bold tracking-tight text-[var(--primary-deep)]">Bundle &amp; Save</span>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
             </div>
             <div className="grid gap-2 sm:grid-cols-3">
               {([1, 2, 3] as const).map((n) => {
@@ -142,18 +147,29 @@ function ProductPage() {
                   <button
                     key={n}
                     onClick={() => setBundle(n)}
-                    className={`relative rounded-xl border-2 p-3 text-left transition ${active ? "border-primary bg-accent/40 shadow-[var(--shadow-soft)]" : "border-border hover:border-primary/40"}`}
+                    className={`group relative overflow-hidden rounded-xl border-2 p-3 text-left transition-all duration-300 ${
+                      active
+                        ? "border-primary bg-white shadow-[0_10px_30px_-10px_oklch(0.62_0.22_295/0.5)] -translate-y-0.5"
+                        : "border-border bg-white/60 hover:border-primary/40 hover:-translate-y-0.5"
+                    }`}
                   >
+                    {active && (
+                      <span className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
+                    )}
                     {popular && (
-                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[var(--gold)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--primary-deep)]">
+                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
                         ★ Most Popular
                       </span>
                     )}
-                    <div className="text-sm font-bold">{n === 1 ? "Single" : `${n}-Pack`}</div>
-                    <div className="text-xs text-muted-foreground">{n} × ${product.price.toFixed(2)}</div>
-                    <div className="mt-1 font-display text-base font-bold text-primary">${(total - save).toFixed(2)}</div>
-                    {save > 0 && (
-                      <div className="text-[11px] font-semibold text-[var(--success)]">Save ${save.toFixed(2)} (15% off)</div>
+                    <div className="text-sm font-bold text-[var(--primary-deep)]">{n === 1 ? "Single" : `${n}-Pack`}</div>
+                    <div className="text-[11px] text-muted-foreground">{n} × ${product.price.toFixed(2)}</div>
+                    <div className="mt-1 font-display text-lg font-bold text-primary">${(total - save).toFixed(2)}</div>
+                    {save > 0 ? (
+                      <div className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-[var(--success)]/15 px-1.5 py-0.5 text-[10px] font-bold text-[var(--success)]">
+                        Save ${save.toFixed(2)}
+                      </div>
+                    ) : (
+                      <div className="mt-0.5 text-[10px] font-medium text-muted-foreground">Standard price</div>
                     )}
                   </button>
                 );
