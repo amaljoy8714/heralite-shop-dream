@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
@@ -41,6 +41,9 @@ function ProductPage() {
   const [qty, setQty] = useState(1);
   const [bundle, setBundle] = useState<1 | 2 | 3>(1);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImg, setLightboxImg] = useState(0);
+  const [zoom, setZoom] = useState(1);
   const add = useCart((s) => s.add);
   const navigate = useNavigate();
 
@@ -59,6 +62,59 @@ function ProductPage() {
     add({ id: product.id, title: product.title, price: product.price, image: product.thumb }, finalQty);
     navigate({ to: "/checkout", search: { step: "address" } });
   };
+
+  const openLightbox = (index: number) => {
+    setLightboxImg(index);
+    setZoom(1);
+    setLightboxOpen(true);
+  };
+
+  const nextImage = () => {
+    setLightboxImg((prev) => (prev + 1) % product.images.length);
+    setZoom(1);
+  };
+
+  const prevImage = () => {
+    setLightboxImg((prev) => (prev - 1 + product.images.length) % product.images.length);
+    setZoom(1);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!lightboxOpen) return;
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      nextImage();
+    }
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prevImage();
+    }
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setLightboxOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleWindowKeyDown = (e: KeyboardEvent) => {
+      if (!lightboxOpen) return;
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nextImage();
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevImage();
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setLightboxOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleWindowKeyDown);
+    return () => window.removeEventListener("keydown", handleWindowKeyDown);
+  }, [lightboxOpen]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -86,9 +142,15 @@ function ProductPage() {
                 </button>
               ))}
             </div>
-            <div className="aspect-square flex-1 overflow-hidden rounded-xl border bg-[var(--accent)]">
+            <button
+              onClick={() => openLightbox(activeImg)}
+              className="group relative aspect-square flex-1 overflow-hidden rounded-xl border bg-[var(--accent)] transition hover:shadow-lg"
+            >
               <img src={product.images[activeImg]} alt={product.title} className="h-full w-full object-cover" />
-            </div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/20">
+                <ZoomIn className="h-8 w-8 text-white drop-shadow-lg transition group-hover:scale-110" />
+              </div>
+            </button>
           </div>
           <div className="mt-3 flex gap-2 md:hidden">
             {product.images.map((img, i) => (
@@ -337,6 +399,84 @@ function ProductPage() {
           </div>
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 transition hover:bg-white/20"
+          >
+            <X className="h-6 w-6 text-white" />
+          </button>
+
+          <div className="flex w-full max-w-4xl flex-col items-center gap-4">
+            <div className="relative flex h-96 w-full items-center justify-center overflow-hidden rounded-lg bg-black">
+              <img
+                src={product.images[lightboxImg]}
+                alt={product.title}
+                className="max-h-full max-w-full object-contain transition-transform duration-200"
+                style={{ transform: `scale(${zoom})` }}
+              />
+            </div>
+
+            <div className="flex w-full items-center justify-between gap-4">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                className="rounded-full bg-white/10 p-3 transition hover:bg-white/20"
+              >
+                <ChevronLeft className="h-6 w-6 text-white" />
+              </button>
+
+              <div className="flex flex-1 gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoom(Math.max(1, zoom - 0.2));
+                  }}
+                  className="flex-1 rounded-lg bg-white/10 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+                >
+                  − Zoom Out
+                </button>
+                <div className="flex flex-1 items-center justify-center rounded-lg bg-white/10 text-sm font-semibold text-white">
+                  {Math.round(zoom * 100)}%
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoom(Math.min(3, zoom + 0.2));
+                  }}
+                  className="flex-1 rounded-lg bg-white/10 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+                >
+                  Zoom In +
+                </button>
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+                className="rounded-full bg-white/10 p-3 transition hover:bg-white/20"
+              >
+                <ChevronRight className="h-6 w-6 text-white" />
+              </button>
+            </div>
+
+            <div className="text-center text-sm text-white/60">
+              Image {lightboxImg + 1} of {product.images.length} • Use arrow keys to navigate • Press ESC to close
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
