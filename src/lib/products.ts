@@ -6,6 +6,15 @@ import img5 from "@/assets/cloud-humidifier-5.png";
 import img6 from "@/assets/cloud-humidifier-6.png";
 import img7 from "@/assets/cloud-humidifier-7.png";
 import img8 from "@/assets/cloud-humidifier-8.png";
+import product1 from "@/assets/Product 1.png";
+import product2 from "@/assets/Product 2.png";
+import product3 from "@/assets/Product 3.png";
+import product4 from "@/assets/Product 4.png";
+import product5 from "@/assets/Product 5.png";
+import product6 from "@/assets/Product 6.png";
+import product7 from "@/assets/Product 7.png";
+import product8 from "@/assets/Product 8.png";
+import product9 from "@/assets/Product 9.png";
 
 export type Product = {
   id: string;
@@ -26,14 +35,14 @@ export type Product = {
 
 export const mainProduct: Product = {
   id: "cloud-rain-humidifier",
-  title: "HeraLite Cloud Rain Humidifier — Sleep & Wellness Diffuser",
+  title: "HeraLite CosmoMist-Astronaut Edition Wellness Diffuser",
   brand: "HeraLite",
   price: 24.99,
   oldPrice: 49.99,
   rating: 4.6,
   ratingCount: 2438,
   images: [img1, img2, img3, img4, img5, img6, img7, img8],
-  thumb: img1,
+  thumb: product1,
   inStock: true,
   bullets: [
     "Calming raindrop sound — perfect for sleep, focus & meditation",
@@ -62,15 +71,15 @@ export const mainProduct: Product = {
 
 export const BUNDLE_DISCOUNT = 0.15; // 15% off when buying 2+ of main product
 
-export type SoldOutProduct = { id: string; title: string; price: number; oldPrice: number; emoji: string };
+export type SoldOutProduct = { id: string; title: string; price: number; oldPrice: number; emoji: string; image: string };
 
 export const soldOutProducts: SoldOutProduct[] = [
-  { id: "s1", title: "Galaxy Star Projector Lamp", price: 21.99, oldPrice: 42.99, emoji: "🌌" },
-  { id: "s2", title: "Sunset Ambient Floor Lamp", price: 32.99, oldPrice: 64.99, emoji: "🌅" },
-  { id: "s3", title: "Crystal Salt Night Lamp", price: 15.99, oldPrice: 31.99, emoji: "🧂" },
-  { id: "s4", title: "Moon Levitating Light", price: 39.99, oldPrice: 79.99, emoji: "🌙" },
-  { id: "s5", title: "Volcano Mist Diffuser", price: 27.99, oldPrice: 54.99, emoji: "🌋" },
-  { id: "s6", title: "Aurora LED Strip Pro", price: 17.99, oldPrice: 35.99, emoji: "✨" },
-  { id: "s7", title: "Zen Garden Aroma Stone", price: 19.99, oldPrice: 39.99, emoji: "🪨" },
-  { id: "s8", title: "Forest Rain Sleep Speaker", price: 29.99, oldPrice: 59.99, emoji: "🌲" },
+  { id: "s1", title: "HeraLite EdenMist-Raindrop Aromatherapy Diffuser & White Noise Humidifler", price: 21.99, oldPrice: 42.99, emoji: "🌧️", image: product2 },
+  { id: "s2", title: "HeraLite LunaMist-Moon Lamp Humidifier&Ambient Night Light", price: 32.99, oldPrice: 64.99, emoji: "🌙", image: product3 },
+  { id: "s3", title: "HeraLite LumaMist-Crystal Bulb Humidifier&Color Ambient Light", price: 15.99, oldPrice: 31.99, emoji: "💡", image: product4 },
+  { id: "s4", title: "HeraLite EmberMist-Realistic Flame Diffuser&7-Color Mood Light", price: 39.99, oldPrice: 79.99, emoji: "🔥", image: product5 },
+  { id: "s5", title: "HeraLite ZenMist — Wood Grain Aroma Diffuser & Ambient Wellness Humidifier", price: 27.99, oldPrice: 54.99, emoji: "🪵", image: product6 },
+  { id: "s6", title: "HeraLite UmbraMist — Umbrella Rain Humidifier & 7-Color Mood Light", price: 17.99, oldPrice: 35.99, emoji: "☂️", image: product7 },
+  { id: "s7", title: "HeraLite NordMist — Natural Wood Orb Humidifier & Soft Glow Diffuser", price: 19.99, oldPrice: 39.99, emoji: "🌲", image: product8 },
+  { id: "s8", title: "HeraLite ChromaMist — RGB Rainbow Humidifier & Color Mist Diffuser", price: 29.99, oldPrice: 59.99, emoji: "🌈", image: product9 },
 ];

@@ -2,6 +2,7 @@ import { createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter } f
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
+import heraLogo from "@/assets/heralite-logo.jpg";
 
 function NotFoundComponent() {
   return (
@@ -45,6 +46,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
     ],
     links: [
+      { rel: "icon", href: heraLogo },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

@@ -142,7 +142,7 @@ function HomePage() {
   );
 }
 
-function SoldOutCard({ product }: { product: { id: string; title: string; price: number; oldPrice: number; emoji: string } }) {
+function SoldOutCard({ product }: { product: { id: string; title: string; price: number; oldPrice: number; emoji: string; image: string } }) {
   const [revealed, setRevealed] = useState(false);
   return (
     <button
@@ -151,9 +151,7 @@ function SoldOutCard({ product }: { product: { id: string; title: string; price:
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-soft)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
     >
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-secondary via-white to-[var(--accent)]/40">
-        <div className={`flex h-full w-full items-center justify-center text-7xl transition-all duration-500 ${revealed ? "scale-90 opacity-30 blur-[2px]" : "opacity-90 group-hover:scale-105"}`}>
-          {product.emoji}
-        </div>
+        <img src={product.image} alt={product.title} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
         {revealed && (
           <>
             <div className="absolute inset-0 animate-[fade-in_0.3s_ease-out] bg-gradient-to-t from-[var(--primary-deep)]/60 via-[var(--primary-deep)]/20 to-transparent" />
