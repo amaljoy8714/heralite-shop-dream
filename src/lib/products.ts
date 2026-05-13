@@ -1,7 +1,11 @@
-import img1 from "@/assets/cloud-humidifier-1.jpg";
-import img2 from "@/assets/cloud-humidifier-2.jpg";
-import img3 from "@/assets/cloud-humidifier-3.jpg";
-import img4 from "@/assets/cloud-humidifier-4.jpg";
+import img1 from "@/assets/cloud-humidifier-1.png";
+import img2 from "@/assets/cloud-humidifier-2.png";
+import img3 from "@/assets/cloud-humidifier-3.png";
+import img4 from "@/assets/cloud-humidifier-4.png";
+import img5 from "@/assets/cloud-humidifier-5.png";
+import img6 from "@/assets/cloud-humidifier-6.png";
+import img7 from "@/assets/cloud-humidifier-7.png";
+import img8 from "@/assets/cloud-humidifier-8.png";
 
 export type Product = {
   id: string;
@@ -28,7 +32,7 @@ export const mainProduct: Product = {
   oldPrice: 49.99,
   rating: 4.6,
   ratingCount: 2438,
-  images: [img1, img2, img3, img4],
+  images: [img1, img2, img3, img4, img5, img6, img7, img8],
   thumb: img1,
   inStock: true,
   bullets: [
