@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Star, Truck, ShieldCheck, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Star, Truck, ShieldCheck, Sparkles, Lock } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
@@ -15,11 +16,11 @@ export const Route = createFileRoute("/")({
 });
 
 const offerStrip = [
-  "✦ FREE US Shipping on every order",
+  "✦ FREE Shipping on every order",
   "✦ 50% Off — Limited stock",
   "✦ Bundle 2 → Extra 15% Off",
   "✦ 30-day money-back guarantee",
-  "✦ FREE shipping across the United States",
+  "✦ Premium curated mood-lighting collection",
 ];
 
 function HomePage() {
@@ -56,9 +57,8 @@ function HomePage() {
               </a>
             </div>
             <div className="mt-8 flex flex-wrap gap-5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> FREE US shipping</span>
+              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> FREE shipping</span>
               <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-primary" /> 30-day returns</span>
-              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" /> 4.6 / 2,400+ reviews</span>
             </div>
           </div>
           <div className="relative">
@@ -76,7 +76,7 @@ function HomePage() {
       <section className="border-b border-border bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-6 py-6 text-center md:grid-cols-4">
           {[
-            ["FREE US Shipping", "On every order"],
+            ["FREE Shipping", "On every order"],
             ["30-Day Returns", "Hassle-free"],
             ["Premium Quality", "Hand inspected"],
             ["Secure Checkout", "256-bit SSL"],
@@ -143,29 +143,44 @@ function HomePage() {
 }
 
 function SoldOutCard({ product }: { product: { id: string; title: string; price: number; oldPrice: number; emoji: string } }) {
+  const [revealed, setRevealed] = useState(false);
   return (
     <button
       type="button"
-      onClick={(e) => e.preventDefault()}
-      className="group relative flex cursor-not-allowed flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-soft)]"
+      onClick={() => setRevealed(true)}
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-soft)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
     >
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-secondary via-white to-[var(--accent)]/40">
-        <div className="flex h-full w-full items-center justify-center text-7xl opacity-30">{product.emoji}</div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--primary-deep)]/30 to-transparent" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-          <Sparkles className="mx-auto h-5 w-5 text-[var(--gold)]" />
-          <div className="mt-1 rounded-full border border-[var(--primary-deep)]/20 bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary-deep)] backdrop-blur">
-            Sold Out
-          </div>
-          <div className="mt-1.5 text-[10px] font-medium uppercase tracking-wider text-white drop-shadow">Restocking soon</div>
+        <div className={`flex h-full w-full items-center justify-center text-7xl transition-all duration-500 ${revealed ? "scale-90 opacity-30 blur-[2px]" : "opacity-90 group-hover:scale-105"}`}>
+          {product.emoji}
         </div>
+        {revealed && (
+          <>
+            <div className="absolute inset-0 animate-[fade-in_0.3s_ease-out] bg-gradient-to-t from-[var(--primary-deep)]/60 via-[var(--primary-deep)]/20 to-transparent" />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center animate-[scale-in_0.3s_ease-out]">
+              <Sparkles className="mx-auto h-5 w-5 text-[var(--gold)]" />
+              <div className="mt-1 rounded-full border border-[var(--primary-deep)]/20 bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--primary-deep)] backdrop-blur shadow-lg">
+                Sold Out
+              </div>
+              <div className="mt-1.5 text-[10px] font-medium uppercase tracking-wider text-white drop-shadow">Restocking soon</div>
+            </div>
+          </>
+        )}
+        {!revealed && (
+          <span className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--primary-deep)] backdrop-blur">
+            <Lock className="inline h-2.5 w-2.5" /> Tap
+          </span>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4">
-        <h3 className="line-clamp-2 text-sm font-semibold text-foreground/70">{product.title}</h3>
+        <h3 className="line-clamp-2 text-sm font-semibold text-foreground">{product.title}</h3>
         <div className="mt-auto flex items-baseline gap-2">
-          <span className="font-display text-lg font-semibold text-muted-foreground">${product.price}</span>
+          <span className="font-display text-lg font-semibold text-primary">${product.price}</span>
+          <span className="text-xs text-muted-foreground line-through">${product.oldPrice}</span>
         </div>
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Notify when back</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          {revealed ? "Notify when back" : "Tap to view"}
+        </span>
       </div>
     </button>
   );
