@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight, Copy, PackageSearch } from "lucide-react";
+import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight, Copy, PackageSearch, Download } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useCart, cartTotal } from "@/lib/cart";
 import { mainProduct, BUNDLE_DISCOUNT } from "@/lib/products";
-import { useOrders, generateTrackingNumber } from "@/lib/orders";
+import { useOrders, generateTrackingNumber, type Order } from "@/lib/orders";
+import { downloadInvoicePdf } from "@/lib/invoice";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
@@ -82,7 +83,7 @@ function CheckoutPage() {
     const tn = generateTrackingNumber();
     const oid = "HL" + Date.now().toString().slice(-8);
     const now = Date.now();
-    addOrder({
+    const order: Order = {
       trackingNumber: tn,
       orderId: oid,
       customerName: form.name,
@@ -97,11 +98,24 @@ function CheckoutPage() {
       status: "Placed",
       timeline: [{ status: "Placed", at: now }],
       estimatedDelivery: "3–7 business days",
-    });
+    };
+    addOrder(order);
     setTrackingNumber(tn);
     setOrderId(oid);
     clear();
     setStep("confirm");
+  };
+
+  const downloadInvoice = () => {
+    if (!trackingNumber || !orderId) return;
+    const order = useOrders.getState().get(trackingNumber);
+    if (!order) return;
+    try {
+      downloadInvoicePdf(order);
+      toast.success("Invoice downloaded");
+    } catch {
+      toast.error("Could not generate invoice");
+    }
   };
 
   const copyTracking = async () => {
@@ -142,9 +156,6 @@ function CheckoutPage() {
                 <Copy className="h-4 w-4" /> Copy
               </button>
             </div>
-            <p className="mt-3 rounded-md bg-[var(--gold)]/15 px-3 py-2 text-xs font-semibold text-[var(--primary-deep)]">
-              ⚠️ Please save this number — you’ll need it to track your order on our Track Order page.
-            </p>
             <Link
               to="/track"
               search={{ tn: trackingNumber }}
@@ -160,7 +171,19 @@ function CheckoutPage() {
             <Row label="Shipping to" value={`${form.address}, ${form.city}, ${form.state} ${form.zip}`} />
             <Row label="Estimated delivery" value="3–7 business days" />
           </div>
-          <Link to="/" className="mt-8 inline-block rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">Continue Shopping</Link>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={downloadInvoice}
+              className="group inline-flex items-center gap-2 rounded-full border-2 border-[var(--primary-deep)]/15 bg-white px-6 py-3 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)] shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[var(--shadow-card)]"
+            >
+              <Download className="h-4 w-4 text-primary transition group-hover:translate-y-0.5" />
+              Download Invoice (PDF)
+            </button>
+            <Link to="/" className="inline-block rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110">
+              Continue Shopping
+            </Link>
+          </div>
         </div>
         <Footer />
       </div>
