@@ -189,11 +189,6 @@ function CheckoutPage() {
       </div>
     );
   }
-        </div>
-        <Footer />
-      </div>
-    );
-  }
 
   // EMPTY CART
   if (items.length === 0) {
