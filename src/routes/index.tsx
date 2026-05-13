@@ -15,11 +15,11 @@ export const Route = createFileRoute("/")({
 });
 
 const offerStrip = [
-  "✦ FREE US Shipping on every order",
+  "✦ FREE Shipping on every order",
   "✦ 50% Off — Limited stock",
   "✦ Bundle 2 → Extra 15% Off",
   "✦ 30-day money-back guarantee",
-  "✦ FREE shipping across the United States",
+  "✦ Premium curated mood-lighting collection",
 ];
 
 function HomePage() {
@@ -56,9 +56,8 @@ function HomePage() {
               </a>
             </div>
             <div className="mt-8 flex flex-wrap gap-5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> FREE US shipping</span>
+              <span className="flex items-center gap-1.5"><Truck className="h-4 w-4 text-primary" /> FREE shipping</span>
               <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-primary" /> 30-day returns</span>
-              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" /> 4.6 / 2,400+ reviews</span>
             </div>
           </div>
           <div className="relative">
@@ -76,7 +75,7 @@ function HomePage() {
       <section className="border-b border-border bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-6 py-6 text-center md:grid-cols-4">
           {[
-            ["FREE US Shipping", "On every order"],
+            ["FREE Shipping", "On every order"],
             ["30-Day Returns", "Hassle-free"],
             ["Premium Quality", "Hand inspected"],
             ["Secure Checkout", "256-bit SSL"],
