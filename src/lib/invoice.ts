@@ -146,7 +146,7 @@ export function downloadInvoicePdf(order: Order) {
   doc.text("Thank you for choosing HeraLite", W - M, y, { align: "right" });
   y += 14;
   doc.setFontSize(8);
-  doc.text("30-day hassle-free returns  ·  Free US shipping  ·  support@heralite.com", M, y);
+  doc.text("30-day hassle-free returns  ·  Free shipping  ·  support@heralite.com", M, y);
 
   doc.save(`HeraLite-Invoice-${order.orderId}.pdf`);
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
@@ -142,19 +142,17 @@ function ProductPage() {
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => openLightbox(activeImg)}
-              className="group relative aspect-square flex-1 overflow-hidden rounded-xl border bg-[var(--accent)] transition hover:shadow-lg"
-            >
-              <img src={product.images[activeImg]} alt={product.title} className="h-full w-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/20">
-                <ZoomIn className="h-8 w-8 text-white drop-shadow-lg transition group-hover:scale-110" />
-              </div>
-            </button>
+            <SwipeGallery
+              images={product.images}
+              alt={product.title}
+              activeImg={activeImg}
+              setActiveImg={setActiveImg}
+              onOpen={openLightbox}
+            />
           </div>
-          <div className="mt-3 flex gap-2 md:hidden">
+          <div className="mt-3 flex gap-2 overflow-x-auto md:hidden">
             {product.images.map((img, i) => (
-              <button key={i} onClick={() => setActiveImg(i)} className={`h-14 w-14 overflow-hidden rounded-md border-2 ${activeImg === i ? "border-primary" : "border-border"}`}>
+              <button key={i} onClick={() => setActiveImg(i)} className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border-2 ${activeImg === i ? "border-primary" : "border-border"}`}>
                 <img src={img} alt="" className="h-full w-full object-cover" />
               </button>
             ))}
@@ -199,7 +197,7 @@ function ProductPage() {
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
             </div>
-            <div className="grid gap-2 sm:grid-cols-3">
+            <div className="grid gap-2 pt-3 sm:grid-cols-3">
               {([1, 2, 3] as const).map((n) => {
                 const active = bundle === n;
                 const total = product.price * n;
@@ -209,17 +207,14 @@ function ProductPage() {
                   <button
                     key={n}
                     onClick={() => setBundle(n)}
-                    className={`group relative overflow-hidden rounded-xl border-2 p-3 text-left transition-all duration-300 ${
+                    className={`group relative rounded-xl border-2 p-3 text-left transition-all duration-300 ${
                       active
                         ? "border-primary bg-white shadow-[0_10px_30px_-10px_oklch(0.62_0.22_295/0.5)] -translate-y-0.5"
                         : "border-border bg-white/60 hover:border-primary/40 hover:-translate-y-0.5"
                     }`}
                   >
-                    {active && (
-                      <span className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
-                    )}
                     {popular && (
-                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
+                      <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
                         ★ Most Popular
                       </span>
                     )}
@@ -278,7 +273,7 @@ function ProductPage() {
               </div>
               <div className="flex flex-col items-center gap-1">
                 <Truck className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free US<br/>Shipping</span>
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free<br/>Shipping</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <Undo2 className="h-4 w-4 text-primary" />
@@ -289,7 +284,7 @@ function ProductPage() {
             <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
               <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary" /> Secure transaction</li>
               <li className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-primary" /> 30-day returns</li>
-              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE US shipping</li>
+              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE shipping</li>
             </ul>
           </div>
         </aside>
@@ -479,6 +474,68 @@ function ProductPage() {
       )}
 
       <Footer />
+    </div>
+  );
+}
+
+function SwipeGallery({
+  images,
+  alt,
+  activeImg,
+  setActiveImg,
+  onOpen,
+}: {
+  images: string[];
+  alt: string;
+  activeImg: number;
+  setActiveImg: (i: number) => void;
+  onOpen: (i: number) => void;
+}) {
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipe = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (touchStart === null || touchEnd === null) return;
+    const dist = touchStart - touchEnd;
+    if (dist > minSwipe) setActiveImg((activeImg + 1) % images.length);
+    else if (dist < -minSwipe) setActiveImg((activeImg - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="relative aspect-square flex-1 overflow-hidden rounded-xl border bg-[var(--accent)] select-none">
+      <div
+        className="flex h-full w-full transition-transform duration-300 ease-out"
+        style={{ transform: `translateX(-${activeImg * 100}%)` }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {images.map((img, i) => (
+          <button
+            type="button"
+            key={i}
+            onClick={() => onOpen(i)}
+            className="h-full w-full shrink-0"
+            aria-label={`View image ${i + 1} of ${images.length}`}
+          >
+            <img src={img} alt={alt} draggable={false} className="pointer-events-none h-full w-full object-cover" />
+          </button>
+        ))}
+      </div>
+      <div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
+        {images.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${i === activeImg ? "w-5 bg-white" : "w-1.5 bg-white/50"}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

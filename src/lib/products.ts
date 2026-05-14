@@ -36,7 +36,7 @@ export type Product = {
 
 export const mainProduct: Product = {
   id: "cloud-rain-humidifier",
-  title: "HeraLiite Cloud Rain Humidifier — Sleep & Wellness Diffuser",
+  title: "HeraLite Cloud Rain Humidifier — Sleep & Wellness Diffuser",
   brand: "HeraLite",
   price: 24.99,
   oldPrice: 49.99,
