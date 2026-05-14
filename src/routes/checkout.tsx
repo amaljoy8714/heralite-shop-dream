@@ -278,7 +278,7 @@ function CheckoutPage() {
             {step === "address" && (
               <form onSubmit={submitAddress} className="rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)]">
                 <h2 className="font-display text-xl font-bold">Shipping address</h2>
-                <p className="text-xs text-muted-foreground">We currently ship across the United States. FREE shipping on every order.</p>
+                <p className="text-xs text-muted-foreground">FREE shipping on every order.</p>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   {([
                     ["name", "Full name", "text"],
