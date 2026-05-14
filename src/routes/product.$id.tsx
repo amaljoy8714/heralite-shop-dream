@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
@@ -142,19 +142,17 @@ function ProductPage() {
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => openLightbox(activeImg)}
-              className="group relative aspect-square flex-1 overflow-hidden rounded-xl border bg-[var(--accent)] transition hover:shadow-lg"
-            >
-              <img src={product.images[activeImg]} alt={product.title} className="h-full w-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/20">
-                <ZoomIn className="h-8 w-8 text-white drop-shadow-lg transition group-hover:scale-110" />
-              </div>
-            </button>
+            <SwipeGallery
+              images={product.images}
+              alt={product.title}
+              activeImg={activeImg}
+              setActiveImg={setActiveImg}
+              onOpen={openLightbox}
+            />
           </div>
-          <div className="mt-3 flex gap-2 md:hidden">
+          <div className="mt-3 flex gap-2 overflow-x-auto md:hidden">
             {product.images.map((img, i) => (
-              <button key={i} onClick={() => setActiveImg(i)} className={`h-14 w-14 overflow-hidden rounded-md border-2 ${activeImg === i ? "border-primary" : "border-border"}`}>
+              <button key={i} onClick={() => setActiveImg(i)} className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border-2 ${activeImg === i ? "border-primary" : "border-border"}`}>
                 <img src={img} alt="" className="h-full w-full object-cover" />
               </button>
             ))}
