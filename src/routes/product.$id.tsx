@@ -477,3 +477,65 @@ function ProductPage() {
     </div>
   );
 }
+
+function SwipeGallery({
+  images,
+  alt,
+  activeImg,
+  setActiveImg,
+  onOpen,
+}: {
+  images: string[];
+  alt: string;
+  activeImg: number;
+  setActiveImg: (i: number) => void;
+  onOpen: (i: number) => void;
+}) {
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipe = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (touchStart === null || touchEnd === null) return;
+    const dist = touchStart - touchEnd;
+    if (dist > minSwipe) setActiveImg((activeImg + 1) % images.length);
+    else if (dist < -minSwipe) setActiveImg((activeImg - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="relative aspect-square flex-1 overflow-hidden rounded-xl border bg-[var(--accent)] select-none">
+      <div
+        className="flex h-full w-full transition-transform duration-300 ease-out"
+        style={{ transform: `translateX(-${activeImg * 100}%)` }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {images.map((img, i) => (
+          <button
+            type="button"
+            key={i}
+            onClick={() => onOpen(i)}
+            className="h-full w-full shrink-0"
+            aria-label={`View image ${i + 1} of ${images.length}`}
+          >
+            <img src={img} alt={alt} draggable={false} className="pointer-events-none h-full w-full object-cover" />
+          </button>
+        ))}
+      </div>
+      <div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
+        {images.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${i === activeImg ? "w-5 bg-white" : "w-1.5 bg-white/50"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
