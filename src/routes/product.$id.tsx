@@ -197,7 +197,7 @@ function ProductPage() {
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
             </div>
-            <div className="grid gap-2 sm:grid-cols-3">
+            <div className="grid gap-2 pt-3 sm:grid-cols-3">
               {([1, 2, 3] as const).map((n) => {
                 const active = bundle === n;
                 const total = product.price * n;
@@ -207,17 +207,14 @@ function ProductPage() {
                   <button
                     key={n}
                     onClick={() => setBundle(n)}
-                    className={`group relative overflow-hidden rounded-xl border-2 p-3 text-left transition-all duration-300 ${
+                    className={`group relative rounded-xl border-2 p-3 text-left transition-all duration-300 ${
                       active
                         ? "border-primary bg-white shadow-[0_10px_30px_-10px_oklch(0.62_0.22_295/0.5)] -translate-y-0.5"
                         : "border-border bg-white/60 hover:border-primary/40 hover:-translate-y-0.5"
                     }`}
                   >
-                    {active && (
-                      <span className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
-                    )}
                     {popular && (
-                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
+                      <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
                         ★ Most Popular
                       </span>
                     )}
@@ -236,7 +233,6 @@ function ProductPage() {
               })}
             </div>
           </div>
-        </div>
 
         {/* Buy Box */}
         <aside className="md:col-span-3">
