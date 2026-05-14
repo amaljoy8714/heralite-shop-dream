@@ -278,7 +278,7 @@ function ProductPage() {
               </div>
               <div className="flex flex-col items-center gap-1">
                 <Truck className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free US<br/>Shipping</span>
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free<br/>Shipping</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <Undo2 className="h-4 w-4 text-primary" />
@@ -289,7 +289,7 @@ function ProductPage() {
             <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
               <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary" /> Secure transaction</li>
               <li className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-primary" /> 30-day returns</li>
-              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE US shipping</li>
+              <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE shipping</li>
             </ul>
           </div>
         </aside>
