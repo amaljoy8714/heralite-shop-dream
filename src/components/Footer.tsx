@@ -6,7 +6,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-3">
         <div>
           <h4 className="mb-3 font-display text-lg text-white">HeraLite</h4>
-          <p className="text-sm">Light. Life. Balance. Premium mood-lighting & wellness, shipped FREE across the United States.</p>
+          <p className="text-sm">Light. Life. Balance. Premium mood-lighting & wellness, with complimentary shipping on every order.</p>
         </div>
         <div>
           <h4 className="mb-3 text-sm font-semibold text-white">Help</h4>
