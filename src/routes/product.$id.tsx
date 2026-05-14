@@ -233,6 +233,7 @@ function ProductPage() {
               })}
             </div>
           </div>
+        </div>
 
         {/* Buy Box */}
         <aside className="md:col-span-3">
