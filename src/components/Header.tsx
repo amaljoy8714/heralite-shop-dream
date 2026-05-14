@@ -12,12 +12,12 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 md:gap-6 md:px-6 md:py-4">
         <Link to="/" className="flex shrink-0 items-center gap-2.5 leading-none group">
           <BrandLogo className="h-9 w-9 shrink-0 transition-transform duration-500 group-hover:rotate-[8deg] group-hover:scale-105 drop-shadow-[0_4px_10px_oklch(0.62_0.22_295/0.35)]" />
-          <div className="flex flex-col">
-            <div className="font-display text-2xl font-bold tracking-tight md:text-[26px] leading-none">
+          <div className="flex flex-col leading-none">
+            <div className="font-display text-[22px] font-bold tracking-tight md:text-[26px]">
               <span className="text-[var(--primary-deep)]">Hera</span>
               <span className="bg-gradient-to-r from-primary to-[var(--primary-deep)] bg-clip-text text-transparent">Lite</span>
             </div>
-            <div className="mt-1.5 text-[9px] font-medium uppercase tracking-[0.32em] text-muted-foreground/90">
+            <div className="mt-1 text-[8px] font-medium uppercase tracking-[0.4em] text-muted-foreground/80 md:text-[9px]">
               Light · Life · Balance
             </div>
           </div>
