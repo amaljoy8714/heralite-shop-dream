@@ -43,7 +43,8 @@ function ProductPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImg, setLightboxImg] = useState(0);
-  const [zoom, setZoom] = useState(1);
+  const [lbTouchStart, setLbTouchStart] = useState<number | null>(null);
+  const [lbTouchEnd, setLbTouchEnd] = useState<number | null>(null);
   const add = useCart((s) => s.add);
   const navigate = useNavigate();
 
@@ -65,18 +66,33 @@ function ProductPage() {
 
   const openLightbox = (index: number) => {
     setLightboxImg(index);
-    setZoom(1);
     setLightboxOpen(true);
   };
 
   const nextImage = () => {
     setLightboxImg((prev) => (prev + 1) % product.images.length);
-    setZoom(1);
   };
 
   const prevImage = () => {
     setLightboxImg((prev) => (prev - 1 + product.images.length) % product.images.length);
-    setZoom(1);
+  };
+
+  const onLbTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) { setLbTouchStart(null); setLbTouchEnd(null); return; }
+    setLbTouchEnd(null);
+    setLbTouchStart(e.targetTouches[0].clientX);
+  };
+  const onLbTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) { setLbTouchStart(null); return; }
+    setLbTouchEnd(e.targetTouches[0].clientX);
+  };
+  const onLbTouchEnd = () => {
+    if (lbTouchStart === null || lbTouchEnd === null) return;
+    const dist = lbTouchStart - lbTouchEnd;
+    if (dist > 50) nextImage();
+    else if (dist < -50) prevImage();
+    setLbTouchStart(null);
+    setLbTouchEnd(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -397,80 +413,56 @@ function ProductPage() {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
+      {/* Fullscreen Image Viewer */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          className="fixed inset-0 z-50 flex flex-col bg-black"
           onClick={() => setLightboxOpen(false)}
           role="dialog"
           aria-modal="true"
         >
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 transition hover:bg-white/20"
+            className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 transition hover:bg-white/20"
+            aria-label="Close"
           >
             <X className="h-6 w-6 text-white" />
           </button>
 
-          <div className="flex w-full max-w-4xl flex-col items-center gap-4">
-            <div className="relative flex h-96 w-full items-center justify-center overflow-hidden rounded-lg bg-black">
-              <img
-                src={product.images[lightboxImg]}
-                alt={product.title}
-                className="max-h-full max-w-full object-contain transition-transform duration-200"
-                style={{ transform: `scale(${zoom})` }}
-              />
-            </div>
+          <div
+            className="flex flex-1 items-center justify-center overflow-auto"
+            style={{ touchAction: "pinch-zoom" }}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={onLbTouchStart}
+            onTouchMove={onLbTouchMove}
+            onTouchEnd={onLbTouchEnd}
+          >
+            <img
+              src={product.images[lightboxImg]}
+              alt={product.title}
+              className="max-h-full max-w-full select-none object-contain"
+              draggable={false}
+              style={{ touchAction: "pinch-zoom" }}
+            />
+          </div>
 
-            <div className="flex w-full items-center justify-between gap-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevImage();
-                }}
-                className="rounded-full bg-white/10 p-3 transition hover:bg-white/20"
-              >
-                <ChevronLeft className="h-6 w-6 text-white" />
-              </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 transition hover:bg-white/20"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="h-6 w-6 text-white" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 transition hover:bg-white/20"
+            aria-label="Next"
+          >
+            <ChevronRight className="h-6 w-6 text-white" />
+          </button>
 
-              <div className="flex flex-1 gap-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setZoom(Math.max(1, zoom - 0.2));
-                  }}
-                  className="flex-1 rounded-lg bg-white/10 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-                >
-                  − Zoom Out
-                </button>
-                <div className="flex flex-1 items-center justify-center rounded-lg bg-white/10 text-sm font-semibold text-white">
-                  {Math.round(zoom * 100)}%
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setZoom(Math.min(3, zoom + 0.2));
-                  }}
-                  className="flex-1 rounded-lg bg-white/10 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-                >
-                  Zoom In +
-                </button>
-              </div>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextImage();
-                }}
-                className="rounded-full bg-white/10 p-3 transition hover:bg-white/20"
-              >
-                <ChevronRight className="h-6 w-6 text-white" />
-              </button>
-            </div>
-
-            <div className="text-center text-sm text-white/60">
-              Image {lightboxImg + 1} of {product.images.length} • Use arrow keys to navigate • Press ESC to close
-            </div>
+          <div className="pb-6 pt-3 text-center text-xs text-white/60">
+            {lightboxImg + 1} / {product.images.length} • Pinch to zoom • Swipe to browse
           </div>
         </div>
       )}
