@@ -120,7 +120,7 @@ function ProductPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <div className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground md:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-4 text-sm text-muted-foreground md:px-6">
         <Link to="/" className="hover:text-primary">Home</Link> <span className="mx-1">/</span>
         <span>Mood Lights</span> <span className="mx-1">/</span>
         <span className="text-foreground">{product.title}</span>
