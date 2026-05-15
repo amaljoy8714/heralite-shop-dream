@@ -120,15 +120,15 @@ function ProductPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <div className="mx-auto max-w-7xl px-4 py-4 text-sm text-muted-foreground md:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-3 text-xs text-muted-foreground md:px-6 md:py-4 md:text-sm">
         <Link to="/" className="hover:text-primary">Home</Link> <span className="mx-1">/</span>
         <span>Mood Lights</span> <span className="mx-1">/</span>
-        <span className="text-foreground">{product.title}</span>
+        <span className="text-foreground">{product.title.split("—")[0].trim()}</span>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 pb-10 md:grid-cols-12 md:px-6">
+      <div className="mx-auto grid max-w-7xl gap-6 px-4 pb-10 md:grid-cols-12 md:gap-8 md:px-6">
         {/* Gallery */}
-        <div className="md:col-span-5">
+        <div className="min-w-0 md:col-span-5">
           <div className="flex gap-3">
             <div className="hidden flex-col gap-2 md:flex">
               {product.images.map((img, i) => (
@@ -160,8 +160,8 @@ function ProductPage() {
         </div>
 
         {/* Info */}
-        <div className="md:col-span-4">
-          <h1 className="font-display text-3xl font-bold leading-tight md:text-4xl">{product.title}</h1>
+        <div className="min-w-0 md:col-span-4">
+          <h1 className="font-display text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">{product.title}</h1>
           <div className="mt-2 flex items-center gap-2 text-base">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -197,7 +197,7 @@ function ProductPage() {
               </div>
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
             </div>
-            <div className="grid gap-2 pt-3 sm:grid-cols-3">
+            <div className="grid grid-cols-3 gap-2 pt-3">
               {([1, 2, 3] as const).map((n) => {
                 const active = bundle === n;
                 const total = product.price * n;
@@ -207,26 +207,26 @@ function ProductPage() {
                   <button
                     key={n}
                     onClick={() => setBundle(n)}
-                    className={`group relative rounded-xl border-2 p-3.5 text-left transition-all duration-300 ${
+                    className={`group relative rounded-xl border-2 p-2.5 text-left transition-all duration-300 sm:p-3.5 ${
                       active
                         ? "border-primary bg-white shadow-[0_10px_30px_-10px_oklch(0.62_0.22_295/0.5)] -translate-y-0.5"
                         : "border-border bg-white/60 hover:border-primary/40 hover:-translate-y-0.5"
                     }`}
                   >
                     {popular && (
-                      <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-3 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
-                        ★ Most Popular
+                      <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md sm:px-3 sm:text-[10px]">
+                        ★ Popular
                       </span>
                     )}
-                    <div className="text-base font-bold text-[var(--primary-deep)]">{n === 1 ? "Single" : `${n}-Pack`}</div>
-                    <div className="text-xs text-muted-foreground">{n} × ${product.price.toFixed(2)}</div>
-                    <div className="mt-1 font-display text-xl font-bold text-primary">${(total - save).toFixed(2)}</div>
+                    <div className="text-sm font-bold text-[var(--primary-deep)] sm:text-base">{n === 1 ? "Single" : `${n}-Pack`}</div>
+                    <div className="text-[10px] text-muted-foreground sm:text-xs">{n} × ${product.price.toFixed(2)}</div>
+                    <div className="mt-1 font-display text-base font-bold text-primary sm:text-xl">${(total - save).toFixed(2)}</div>
                     {save > 0 ? (
-                      <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-[var(--success)]/15 px-2 py-0.5 text-xs font-bold text-[var(--success)]">
+                      <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-[var(--success)]/15 px-1.5 py-0.5 text-[10px] font-bold text-[var(--success)] sm:px-2 sm:text-xs">
                         Save ${save.toFixed(2)}
                       </div>
                     ) : (
-                      <div className="mt-1 text-xs font-medium text-muted-foreground">Standard price</div>
+                      <div className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-xs">Standard</div>
                     )}
                   </button>
                 );
@@ -236,7 +236,7 @@ function ProductPage() {
         </div>
 
         {/* Buy Box */}
-        <aside className="md:col-span-3">
+        <aside className="min-w-0 md:col-span-3">
           <div className="rounded-xl border bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="font-display text-3xl font-bold text-primary">${effectiveTotal.toFixed(2)}</div>
             {bundleSavings > 0 && (
