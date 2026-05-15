@@ -296,26 +296,28 @@ function ProductPage() {
           <h2 className="font-display text-2xl font-bold md:text-3xl">Product description</h2>
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <div>
-              <p className="leading-relaxed text-muted-foreground">{product.description}</p>
-              <h3 className="mt-6 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)]">Highlights</h3>
-              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm">
+              <p className="text-base leading-relaxed text-muted-foreground">{product.description}</p>
+              <h3 className="mt-6 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)]">Highlights</h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-base">
                 {product.bullets.map((b) => <li key={b}>{b}</li>)}
               </ul>
             </div>
             <img src={product.images[1]} alt="" className="aspect-square rounded-xl object-cover" />
           </div>
 
-          <h3 className="mt-10 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)]">Specifications</h3>
-          <table className="mt-3 w-full max-w-2xl text-sm">
-            <tbody>
-              {product.specs.map((s) => (
-                <tr key={s.label} className="border-b">
-                  <td className="bg-muted/40 px-4 py-3 font-semibold">{s.label}</td>
-                  <td className="px-4 py-3">{s.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3 className="mt-10 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)]">Specifications</h3>
+          <div className="mt-3 -mx-2 overflow-x-auto">
+            <table className="w-full max-w-2xl text-base">
+              <tbody>
+                {product.specs.map((s) => (
+                  <tr key={s.label} className="border-b">
+                    <td className="bg-muted/40 px-4 py-3 font-semibold whitespace-nowrap">{s.label}</td>
+                    <td className="px-4 py-3">{s.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
