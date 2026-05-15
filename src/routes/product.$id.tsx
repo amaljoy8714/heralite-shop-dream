@@ -373,12 +373,12 @@ function ProductPage() {
               {product.reviews.map((r, i) => (
                 <div key={i} className="border-b pb-5 last:border-b-0">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-foreground">
                       {r.name[0]}
                     </div>
                     <div>
-                      <div className="text-sm font-semibold">{r.name}</div>
-                      <div className="text-xs text-muted-foreground">{r.date}</div>
+                      <div className="text-base font-semibold">{r.name}</div>
+                      <div className="text-sm text-muted-foreground">{r.date}</div>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
@@ -387,9 +387,9 @@ function ProductPage() {
                         <Star key={j} className={`h-4 w-4 ${j < r.rating ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
                       ))}
                     </div>
-                    <span className="text-sm font-semibold">{r.title}</span>
+                    <span className="text-base font-semibold">{r.title}</span>
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
+                  <p className="mt-2 text-base text-muted-foreground">{r.body}</p>
                 </div>
               ))}
             </div>
