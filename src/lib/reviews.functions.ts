@@ -87,19 +87,8 @@ export const submitReview = createServerFn({ method: "POST" })
       confidence = Math.max(confidence, 0.7);
     }
 
-    // Rule 1: duplicate text using pg_trgm
-    const { data: dupes } = await supabaseAdmin.rpc("find_similar_reviews", {
-      _product_id: data.productId,
-      _text: data.text,
-    } as never).then(
-      (r) => r,
-      () => ({ data: null }),
-    );
-    if (Array.isArray(dupes) && dupes.length > 0) {
-      reasons.push("duplicate_text");
-      confidence = Math.max(confidence, 0.85);
-    } else {
-      // Fallback: simple JS similarity check on recent reviews
+    // Rule 1: duplicate text — bigram similarity vs recent reviews
+    {
       const { data: recent } = await supabaseAdmin
         .from("reviews")
         .select("review_text")
