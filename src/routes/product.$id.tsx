@@ -160,8 +160,8 @@ function ProductPage() {
         </div>
 
         {/* Info */}
-        <div className="md:col-span-4">
-          <h1 className="font-display text-3xl font-bold leading-tight md:text-4xl">{product.title}</h1>
+        <div className="min-w-0 md:col-span-4">
+          <h1 className="font-display text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">{product.title}</h1>
           <div className="mt-2 flex items-center gap-2 text-base">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
