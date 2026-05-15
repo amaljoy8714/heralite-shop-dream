@@ -341,13 +341,13 @@ function ProductPage() {
               <div key={i}>
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold hover:text-primary"
+                  className="flex w-full items-center justify-between py-4 text-left text-base font-semibold hover:text-primary"
                 >
                   <span>{f.q}</span>
-                  <span className="ml-4 text-xl text-primary">{openFaq === i ? "−" : "+"}</span>
+                  <span className="ml-4 text-2xl text-primary">{openFaq === i ? "−" : "+"}</span>
                 </button>
                 {openFaq === i && (
-                  <p className="pb-4 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                  <p className="pb-4 text-base leading-relaxed text-muted-foreground">{f.a}</p>
                 )}
               </div>
             ))}
