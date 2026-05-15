@@ -120,7 +120,7 @@ function ProductPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <div className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground md:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-4 text-sm text-muted-foreground md:px-6">
         <Link to="/" className="hover:text-primary">Home</Link> <span className="mx-1">/</span>
         <span>Mood Lights</span> <span className="mx-1">/</span>
         <span className="text-foreground">{product.title}</span>
@@ -161,11 +161,11 @@ function ProductPage() {
 
         {/* Info */}
         <div className="md:col-span-4">
-          <h1 className="font-display text-2xl font-bold leading-tight md:text-3xl">{product.title}</h1>
-          <div className="mt-2 flex items-center gap-2 text-sm">
+          <h1 className="font-display text-3xl font-bold leading-tight md:text-4xl">{product.title}</h1>
+          <div className="mt-2 flex items-center gap-2 text-base">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-4 w-4 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
+                <Star key={i} className={`h-5 w-5 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
               ))}
             </div>
             <a href="#reviews" className="text-primary hover:underline">{product.rating} · Read reviews</a>
@@ -173,16 +173,16 @@ function ProductPage() {
 
           <hr className="my-4" />
 
-          <div className="flex items-baseline gap-3">
+          <div className="flex flex-wrap items-baseline gap-3">
             <span className="font-display text-4xl font-bold text-primary">${product.price}</span>
-            <span className="rounded-full bg-[var(--success)]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--success)]">
+            <span className="rounded-full bg-[var(--success)]/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--success)]">
               Free Shipping Included
             </span>
           </div>
 
-          <ul className="mt-5 space-y-2 text-sm">
+          <ul className="mt-5 space-y-2.5 text-base">
             {product.bullets.map((b) => (
-              <li key={b} className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span>{b}</span></li>
+              <li key={b} className="flex gap-2"><Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" /><span>{b}</span></li>
             ))}
           </ul>
 
@@ -193,9 +193,9 @@ function ProductPage() {
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[var(--gold)] to-[oklch(0.7_0.16_70)] shadow-[0_4px_10px_-2px_oklch(0.78_0.14_80/0.6)]">
                   <Crown className="h-3.5 w-3.5 text-[var(--primary-deep)]" />
                 </span>
-                <span className="font-display text-base font-bold tracking-tight text-[var(--primary-deep)]">Bundle &amp; Save</span>
+                <span className="font-display text-lg font-bold tracking-tight text-[var(--primary-deep)]">Bundle &amp; Save</span>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
             </div>
             <div className="grid gap-2 pt-3 sm:grid-cols-3">
               {([1, 2, 3] as const).map((n) => {
@@ -207,26 +207,26 @@ function ProductPage() {
                   <button
                     key={n}
                     onClick={() => setBundle(n)}
-                    className={`group relative rounded-xl border-2 p-3 text-left transition-all duration-300 ${
+                    className={`group relative rounded-xl border-2 p-3.5 text-left transition-all duration-300 ${
                       active
                         ? "border-primary bg-white shadow-[0_10px_30px_-10px_oklch(0.62_0.22_295/0.5)] -translate-y-0.5"
                         : "border-border bg-white/60 hover:border-primary/40 hover:-translate-y-0.5"
                     }`}
                   >
                     {popular && (
-                      <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
+                      <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[var(--gold)] to-[oklch(0.72_0.15_70)] px-3 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--primary-deep)] shadow-md">
                         ★ Most Popular
                       </span>
                     )}
-                    <div className="text-sm font-bold text-[var(--primary-deep)]">{n === 1 ? "Single" : `${n}-Pack`}</div>
-                    <div className="text-[11px] text-muted-foreground">{n} × ${product.price.toFixed(2)}</div>
-                    <div className="mt-1 font-display text-lg font-bold text-primary">${(total - save).toFixed(2)}</div>
+                    <div className="text-base font-bold text-[var(--primary-deep)]">{n === 1 ? "Single" : `${n}-Pack`}</div>
+                    <div className="text-xs text-muted-foreground">{n} × ${product.price.toFixed(2)}</div>
+                    <div className="mt-1 font-display text-xl font-bold text-primary">${(total - save).toFixed(2)}</div>
                     {save > 0 ? (
-                      <div className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-[var(--success)]/15 px-1.5 py-0.5 text-[10px] font-bold text-[var(--success)]">
+                      <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-[var(--success)]/15 px-2 py-0.5 text-xs font-bold text-[var(--success)]">
                         Save ${save.toFixed(2)}
                       </div>
                     ) : (
-                      <div className="mt-0.5 text-[10px] font-medium text-muted-foreground">Standard price</div>
+                      <div className="mt-1 text-xs font-medium text-muted-foreground">Standard price</div>
                     )}
                   </button>
                 );
@@ -238,50 +238,50 @@ function ProductPage() {
         {/* Buy Box */}
         <aside className="md:col-span-3">
           <div className="rounded-xl border bg-card p-5 shadow-[var(--shadow-card)]">
-            <div className="font-display text-2xl font-bold text-primary">${effectiveTotal.toFixed(2)}</div>
+            <div className="font-display text-3xl font-bold text-primary">${effectiveTotal.toFixed(2)}</div>
             {bundleSavings > 0 && (
-              <div className="text-xs font-semibold text-[var(--success)]">Bundle saving applied</div>
+              <div className="text-sm font-semibold text-[var(--success)]">Bundle saving applied</div>
             )}
-            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-              <Truck className="h-4 w-4 text-primary" /> FREE delivery <span className="font-semibold text-foreground">3–7 business days</span>
+            <div className="mt-3 flex items-center gap-2 text-base text-muted-foreground">
+              <Truck className="h-5 w-5 text-primary" /> FREE delivery <span className="font-semibold text-foreground">3–7 business days</span>
             </div>
-            <div className="mt-1 text-sm font-bold text-[var(--success)]">In stock · Ships within 1 business day</div>
+            <div className="mt-1 text-base font-bold text-[var(--success)]">In stock · Ships within 1 business day</div>
 
             {bundle === 1 && (
               <div className="mt-4 flex items-center gap-3">
-                <span className="text-sm font-semibold">Qty</span>
+                <span className="text-base font-semibold">Qty</span>
                 <div className="flex items-center rounded-md border">
-                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-2 py-1.5 hover:bg-muted"><Minus className="h-4 w-4" /></button>
-                  <span className="w-8 text-center text-sm font-semibold">{qty}</span>
-                  <button onClick={() => setQty(qty + 1)} className="px-2 py-1.5 hover:bg-muted"><Plus className="h-4 w-4" /></button>
+                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-3 py-2 hover:bg-muted"><Minus className="h-4 w-4" /></button>
+                  <span className="w-10 text-center text-base font-semibold">{qty}</span>
+                  <button onClick={() => setQty(qty + 1)} className="px-3 py-2 hover:bg-muted"><Plus className="h-4 w-4" /></button>
                 </div>
               </div>
             )}
 
-            <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-2.5 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
+            <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-3 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
               Add to Cart
             </button>
-            <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-2.5 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
+            <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-3 text-base font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
               Buy Now
             </button>
 
             {/* Trust row */}
             <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4 text-center">
               <div className="flex flex-col items-center gap-1">
-                <Lock className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Secure<br/>Checkout</span>
+                <Lock className="h-5 w-5 text-primary" />
+                <span className="text-xs font-semibold leading-tight text-muted-foreground">Secure<br/>Checkout</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <Truck className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free<br/>Shipping</span>
+                <Truck className="h-5 w-5 text-primary" />
+                <span className="text-xs font-semibold leading-tight text-muted-foreground">Free<br/>Shipping</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <Undo2 className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">30-Day<br/>Returns</span>
+                <Undo2 className="h-5 w-5 text-primary" />
+                <span className="text-xs font-semibold leading-tight text-muted-foreground">30-Day<br/>Returns</span>
               </div>
             </div>
 
-            <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary" /> Secure transaction</li>
               <li className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-primary" /> 30-day returns</li>
               <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE shipping</li>
@@ -296,26 +296,28 @@ function ProductPage() {
           <h2 className="font-display text-2xl font-bold md:text-3xl">Product description</h2>
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <div>
-              <p className="leading-relaxed text-muted-foreground">{product.description}</p>
-              <h3 className="mt-6 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)]">Highlights</h3>
-              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm">
+              <p className="text-base leading-relaxed text-muted-foreground">{product.description}</p>
+              <h3 className="mt-6 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)]">Highlights</h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-base">
                 {product.bullets.map((b) => <li key={b}>{b}</li>)}
               </ul>
             </div>
             <img src={product.images[1]} alt="" className="aspect-square rounded-xl object-cover" />
           </div>
 
-          <h3 className="mt-10 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)]">Specifications</h3>
-          <table className="mt-3 w-full max-w-2xl text-sm">
-            <tbody>
-              {product.specs.map((s) => (
-                <tr key={s.label} className="border-b">
-                  <td className="bg-muted/40 px-4 py-3 font-semibold">{s.label}</td>
-                  <td className="px-4 py-3">{s.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3 className="mt-10 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)]">Specifications</h3>
+          <div className="mt-3 -mx-2 overflow-x-auto">
+            <table className="w-full max-w-2xl text-base">
+              <tbody>
+                {product.specs.map((s) => (
+                  <tr key={s.label} className="border-b">
+                    <td className="bg-muted/40 px-4 py-3 font-semibold whitespace-nowrap">{s.label}</td>
+                    <td className="px-4 py-3">{s.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -339,13 +341,13 @@ function ProductPage() {
               <div key={i}>
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold hover:text-primary"
+                  className="flex w-full items-center justify-between py-4 text-left text-base font-semibold hover:text-primary"
                 >
                   <span>{f.q}</span>
-                  <span className="ml-4 text-xl text-primary">{openFaq === i ? "−" : "+"}</span>
+                  <span className="ml-4 text-2xl text-primary">{openFaq === i ? "−" : "+"}</span>
                 </button>
                 {openFaq === i && (
-                  <p className="pb-4 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                  <p className="pb-4 text-base leading-relaxed text-muted-foreground">{f.a}</p>
                 )}
               </div>
             ))}
@@ -371,12 +373,12 @@ function ProductPage() {
               {product.reviews.map((r, i) => (
                 <div key={i} className="border-b pb-5 last:border-b-0">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-foreground">
                       {r.name[0]}
                     </div>
                     <div>
-                      <div className="text-sm font-semibold">{r.name}</div>
-                      <div className="text-xs text-muted-foreground">{r.date}</div>
+                      <div className="text-base font-semibold">{r.name}</div>
+                      <div className="text-sm text-muted-foreground">{r.date}</div>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
@@ -385,9 +387,9 @@ function ProductPage() {
                         <Star key={j} className={`h-4 w-4 ${j < r.rating ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
                       ))}
                     </div>
-                    <span className="text-sm font-semibold">{r.title}</span>
+                    <span className="text-base font-semibold">{r.title}</span>
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
+                  <p className="mt-2 text-base text-muted-foreground">{r.body}</p>
                 </div>
               ))}
             </div>

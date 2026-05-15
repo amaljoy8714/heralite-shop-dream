@@ -69,11 +69,15 @@
 
 @layer base {
   * { border-color: var(--color-border); }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
   }
+  button, a { touch-action: manipulation; }
+  input, select, textarea { font-size: 16px; }
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
