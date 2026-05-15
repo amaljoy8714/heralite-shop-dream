@@ -211,7 +211,7 @@ function SoldOutCard({ product }: { product: { id: string; title: string; price:
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-soft)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
     >
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-secondary via-white to-[var(--accent)]/40">
-        <img src={product.image} alt={product.title} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+        <img src={product.image} alt={product.title} loading="lazy" className="h-full w-full object-contain p-3 transition duration-700 group-hover:scale-105" />
         {revealed && (
           <>
             <div className="absolute inset-0 animate-[fade-in_0.3s_ease-out] bg-gradient-to-t from-[var(--primary-deep)]/70 via-[var(--primary-deep)]/25 to-transparent" />
