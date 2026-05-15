@@ -120,15 +120,15 @@ function ProductPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <div className="mx-auto max-w-7xl px-4 py-4 text-sm text-muted-foreground md:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-3 text-xs text-muted-foreground md:px-6 md:py-4 md:text-sm">
         <Link to="/" className="hover:text-primary">Home</Link> <span className="mx-1">/</span>
         <span>Mood Lights</span> <span className="mx-1">/</span>
-        <span className="text-foreground">{product.title}</span>
+        <span className="text-foreground">{product.title.split("—")[0].trim()}</span>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 pb-10 md:grid-cols-12 md:px-6">
+      <div className="mx-auto grid max-w-7xl gap-6 px-4 pb-10 md:grid-cols-12 md:gap-8 md:px-6">
         {/* Gallery */}
-        <div className="md:col-span-5">
+        <div className="min-w-0 md:col-span-5">
           <div className="flex gap-3">
             <div className="hidden flex-col gap-2 md:flex">
               {product.images.map((img, i) => (
