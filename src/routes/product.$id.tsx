@@ -238,50 +238,50 @@ function ProductPage() {
         {/* Buy Box */}
         <aside className="md:col-span-3">
           <div className="rounded-xl border bg-card p-5 shadow-[var(--shadow-card)]">
-            <div className="font-display text-2xl font-bold text-primary">${effectiveTotal.toFixed(2)}</div>
+            <div className="font-display text-3xl font-bold text-primary">${effectiveTotal.toFixed(2)}</div>
             {bundleSavings > 0 && (
-              <div className="text-xs font-semibold text-[var(--success)]">Bundle saving applied</div>
+              <div className="text-sm font-semibold text-[var(--success)]">Bundle saving applied</div>
             )}
-            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-              <Truck className="h-4 w-4 text-primary" /> FREE delivery <span className="font-semibold text-foreground">3–7 business days</span>
+            <div className="mt-3 flex items-center gap-2 text-base text-muted-foreground">
+              <Truck className="h-5 w-5 text-primary" /> FREE delivery <span className="font-semibold text-foreground">3–7 business days</span>
             </div>
-            <div className="mt-1 text-sm font-bold text-[var(--success)]">In stock · Ships within 1 business day</div>
+            <div className="mt-1 text-base font-bold text-[var(--success)]">In stock · Ships within 1 business day</div>
 
             {bundle === 1 && (
               <div className="mt-4 flex items-center gap-3">
-                <span className="text-sm font-semibold">Qty</span>
+                <span className="text-base font-semibold">Qty</span>
                 <div className="flex items-center rounded-md border">
-                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-2 py-1.5 hover:bg-muted"><Minus className="h-4 w-4" /></button>
-                  <span className="w-8 text-center text-sm font-semibold">{qty}</span>
-                  <button onClick={() => setQty(qty + 1)} className="px-2 py-1.5 hover:bg-muted"><Plus className="h-4 w-4" /></button>
+                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-3 py-2 hover:bg-muted"><Minus className="h-4 w-4" /></button>
+                  <span className="w-10 text-center text-base font-semibold">{qty}</span>
+                  <button onClick={() => setQty(qty + 1)} className="px-3 py-2 hover:bg-muted"><Plus className="h-4 w-4" /></button>
                 </div>
               </div>
             )}
 
-            <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-2.5 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
+            <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-3 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
               Add to Cart
             </button>
-            <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-2.5 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
+            <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-3 text-base font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
               Buy Now
             </button>
 
             {/* Trust row */}
             <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4 text-center">
               <div className="flex flex-col items-center gap-1">
-                <Lock className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Secure<br/>Checkout</span>
+                <Lock className="h-5 w-5 text-primary" />
+                <span className="text-xs font-semibold leading-tight text-muted-foreground">Secure<br/>Checkout</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <Truck className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">Free<br/>Shipping</span>
+                <Truck className="h-5 w-5 text-primary" />
+                <span className="text-xs font-semibold leading-tight text-muted-foreground">Free<br/>Shipping</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <Undo2 className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">30-Day<br/>Returns</span>
+                <Undo2 className="h-5 w-5 text-primary" />
+                <span className="text-xs font-semibold leading-tight text-muted-foreground">30-Day<br/>Returns</span>
               </div>
             </div>
 
-            <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary" /> Secure transaction</li>
               <li className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-primary" /> 30-day returns</li>
               <li className="flex items-center gap-2"><Truck className="h-4 w-4 text-primary" /> FREE shipping</li>
