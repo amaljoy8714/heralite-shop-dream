@@ -45,7 +45,7 @@ export function ReviewSection({ productSlug }: { productSlug: string }) {
     setLoading(true);
     try {
       const res = await fetchReviews({ data: { productSlug, sort } });
-      setData(res);
+      setData(res as never);
       if (user && res.reviews.length) {
         const v = await myVotes({ data: { reviewIds: res.reviews.map((r) => r.id) } });
         setVoted(new Set(v.voted));
