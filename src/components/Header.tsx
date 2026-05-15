@@ -1,11 +1,30 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, MapPin, PackageSearch } from "lucide-react";
+import { ShoppingCart, MapPin, PackageSearch, User, LogOut, Package, Shield, LogIn } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useCart, cartCount } from "@/lib/cart";
+import { useAuth, signOut } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { BrandLogo } from "@/components/BrandLogo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   const items = useCart((s) => s.items);
   const count = cartCount(items);
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-white/80 backdrop-blur-xl">
@@ -39,6 +58,47 @@ export function Header() {
           <PackageSearch className="h-[18px] w-[18px] text-primary" />
           <span className="hidden md:inline tracking-wide">Track Order</span>
         </Link>
+
+        {/* Account */}
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-primary/20 bg-white px-3 py-2 text-sm font-bold text-[var(--primary-deep)] transition-all hover:-translate-y-0.5 hover:border-primary/50">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+                {(user.email ?? "?")[0].toUpperCase()}
+              </div>
+              <span className="hidden md:inline max-w-[120px] truncate">{user.email}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/orders" className="flex items-center gap-2 cursor-pointer">
+                  <Package className="h-4 w-4" /> Your Orders
+                </Link>
+              </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/reviews" className="flex items-center gap-2 cursor-pointer">
+                    <Shield className="h-4 w-4" /> Admin · Reviews
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => signOut()} className="text-destructive cursor-pointer">
+                <LogOut className="h-4 w-4 mr-2" /> Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link
+            to="/login"
+            search={{ redirect: "/" }}
+            className="flex items-center gap-2 rounded-full border border-primary/20 bg-white px-3 py-2 text-sm font-bold text-[var(--primary-deep)] transition-all hover:-translate-y-0.5 hover:border-primary/50"
+          >
+            <LogIn className="h-[18px] w-[18px] text-primary" />
+            <span className="hidden md:inline">Sign in</span>
+          </Link>
+        )}
 
         <Link to="/checkout" className="relative flex items-center gap-2 rounded-full px-3 py-2 transition-colors hover:bg-secondary">
           <div className="relative">
