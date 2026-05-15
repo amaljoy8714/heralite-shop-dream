@@ -43,7 +43,8 @@ function ProductPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImg, setLightboxImg] = useState(0);
-  const [zoom, setZoom] = useState(1);
+  const [lbTouchStart, setLbTouchStart] = useState<number | null>(null);
+  const [lbTouchEnd, setLbTouchEnd] = useState<number | null>(null);
   const add = useCart((s) => s.add);
   const navigate = useNavigate();
 
