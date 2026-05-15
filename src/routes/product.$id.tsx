@@ -66,18 +66,33 @@ function ProductPage() {
 
   const openLightbox = (index: number) => {
     setLightboxImg(index);
-    setZoom(1);
     setLightboxOpen(true);
   };
 
   const nextImage = () => {
     setLightboxImg((prev) => (prev + 1) % product.images.length);
-    setZoom(1);
   };
 
   const prevImage = () => {
     setLightboxImg((prev) => (prev - 1 + product.images.length) % product.images.length);
-    setZoom(1);
+  };
+
+  const onLbTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) { setLbTouchStart(null); setLbTouchEnd(null); return; }
+    setLbTouchEnd(null);
+    setLbTouchStart(e.targetTouches[0].clientX);
+  };
+  const onLbTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) { setLbTouchStart(null); return; }
+    setLbTouchEnd(e.targetTouches[0].clientX);
+  };
+  const onLbTouchEnd = () => {
+    if (lbTouchStart === null || lbTouchEnd === null) return;
+    const dist = lbTouchStart - lbTouchEnd;
+    if (dist > 50) nextImage();
+    else if (dist < -50) prevImage();
+    setLbTouchStart(null);
+    setLbTouchEnd(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
