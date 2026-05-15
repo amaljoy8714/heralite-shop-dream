@@ -161,11 +161,11 @@ function ProductPage() {
 
         {/* Info */}
         <div className="md:col-span-4">
-          <h1 className="font-display text-2xl font-bold leading-tight md:text-3xl">{product.title}</h1>
-          <div className="mt-2 flex items-center gap-2 text-sm">
+          <h1 className="font-display text-3xl font-bold leading-tight md:text-4xl">{product.title}</h1>
+          <div className="mt-2 flex items-center gap-2 text-base">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-4 w-4 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
+                <Star key={i} className={`h-5 w-5 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
               ))}
             </div>
             <a href="#reviews" className="text-primary hover:underline">{product.rating} · Read reviews</a>
@@ -173,16 +173,16 @@ function ProductPage() {
 
           <hr className="my-4" />
 
-          <div className="flex items-baseline gap-3">
+          <div className="flex flex-wrap items-baseline gap-3">
             <span className="font-display text-4xl font-bold text-primary">${product.price}</span>
-            <span className="rounded-full bg-[var(--success)]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--success)]">
+            <span className="rounded-full bg-[var(--success)]/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--success)]">
               Free Shipping Included
             </span>
           </div>
 
-          <ul className="mt-5 space-y-2 text-sm">
+          <ul className="mt-5 space-y-2.5 text-base">
             {product.bullets.map((b) => (
-              <li key={b} className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span>{b}</span></li>
+              <li key={b} className="flex gap-2"><Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" /><span>{b}</span></li>
             ))}
           </ul>
 
