@@ -197,7 +197,7 @@ function ProductPage() {
               </div>
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--gold)]">Limited</span>
             </div>
-            <div className="grid gap-2 pt-3 sm:grid-cols-3">
+            <div className="grid grid-cols-3 gap-2 pt-3">
               {([1, 2, 3] as const).map((n) => {
                 const active = bundle === n;
                 const total = product.price * n;
