@@ -236,7 +236,7 @@ function ProductPage() {
         </div>
 
         {/* Buy Box */}
-        <aside className="md:col-span-3">
+        <aside className="min-w-0 md:col-span-3">
           <div className="rounded-xl border bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="font-display text-3xl font-bold text-primary">${effectiveTotal.toFixed(2)}</div>
             {bundleSavings > 0 && (
