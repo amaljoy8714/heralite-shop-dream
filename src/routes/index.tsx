@@ -71,21 +71,17 @@ function HomePage() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
             {ALL_PRODUCTS.map((p, idx) => {
               const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
-              return (
-                <Link
-                  key={`suggest-${p.id}`}
-                  to="/product/$id"
-                  params={{ id: p.id }}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/60 bg-white/70 shadow-[0_4px_20px_rgba(20,20,40,0.06)] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]"
-                  style={{ animation: `fade-in 0.6s ease-out ${idx * 60}ms backwards` }}
-                >
+              const isMain = p.id === mainProduct.id;
+
+              const cardInner = (
+                <>
                   {p.badge && (
                     <div className="absolute right-2 top-2 z-10 rounded-full bg-[var(--primary-deep)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md">
                       {p.badge}
                     </div>
                   )}
                   <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-white via-secondary/30 to-white">
-                    <img src={p.image} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <img src={p.image} alt={p.title} loading="lazy" className={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 ${!isMain ? "grayscale-[0.15]" : ""}`} />
                     {discount > 0 && (
                       <span className="absolute left-2 top-2 rounded-full bg-[var(--gold)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--primary-deep)] shadow-sm">
                         -{discount}%
@@ -99,7 +95,34 @@ function HomePage() {
                       <span className="text-[11px] text-muted-foreground line-through">${p.oldPrice.toFixed(2)}</span>
                     </div>
                   </div>
-                </Link>
+                </>
+              );
+
+              const className = "group relative flex flex-col overflow-hidden rounded-2xl border border-white/60 bg-white/70 text-left shadow-[0_4px_20px_rgba(20,20,40,0.06)] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]";
+              const style = { animation: `fade-in 0.6s ease-out ${idx * 60}ms backwards` } as const;
+
+              if (isMain) {
+                return (
+                  <Link key={`p-${p.id}`} to="/product/$id" params={{ id: p.id }} className={className} style={style}>
+                    {cardInner}
+                  </Link>
+                );
+              }
+              return (
+                <button
+                  key={`p-${p.id}`}
+                  type="button"
+                  onClick={() =>
+                    toast.error("Sold Out", {
+                      description: "This piece is currently unavailable. Restock coming soon.",
+                      icon: <BadgeX className="h-4 w-4" />,
+                    })
+                  }
+                  className={className}
+                  style={style}
+                >
+                  {cardInner}
+                </button>
               );
             })}
           </div>
