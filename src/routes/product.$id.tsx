@@ -343,10 +343,41 @@ function ProductPage({ product }: { product: Product }) {
 
           <FlashOfferCard price={product.price} oldPrice={product.oldPrice} />
 
-          <div className="mt-3">
-            <span className="rounded-full bg-[var(--success)]/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--success)]">
-              Free Shipping Included
-            </span>
+          <div className="mt-4 rounded-2xl border border-[var(--success)]/25 bg-[var(--success)]/5 p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-[var(--success)]" />
+              <span className="font-display text-base font-bold tracking-tight text-[var(--success)]">Service commitment</span>
+            </div>
+            <ul className="space-y-3 text-sm">
+              <li className="flex gap-3">
+                <Truck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--success)]" />
+                <div>
+                  <div className="font-bold text-foreground">Free shipping worldwide</div>
+                  <div className="text-xs text-muted-foreground">Delivery in 3–7 business days · tracked</div>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <Zap className="mt-0.5 h-4 w-4 shrink-0 text-[var(--success)]" />
+                <div>
+                  <div className="font-bold text-foreground">Fast dispatch</div>
+                  <div className="text-xs text-muted-foreground">Ships within 1 business day from our studio</div>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <Undo2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--success)]" />
+                <div>
+                  <div className="font-bold text-foreground">Free returns within 30 days</div>
+                  <div className="text-xs text-muted-foreground">Hassle-free refund if you change your mind</div>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <Lock className="mt-0.5 h-4 w-4 shrink-0 text-[var(--success)]" />
+                <div>
+                  <div className="font-bold text-foreground">Security &amp; Privacy</div>
+                  <div className="text-xs text-muted-foreground">Safe payments · Secure personal details</div>
+                </div>
+              </li>
+            </ul>
           </div>
 
           <ul className="mt-5 space-y-2.5 text-base">
