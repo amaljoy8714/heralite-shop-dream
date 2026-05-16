@@ -145,25 +145,26 @@ function ServiceCommitmentList() {
   const active = openIdx !== null ? SERVICE_ITEMS[openIdx] : null;
   return (
     <>
-      <div className="mt-4 divide-y divide-[var(--success)]/15 rounded-2xl border border-[var(--success)]/20 bg-[var(--success)]/5">
-        <div className="flex items-center gap-2 px-4 py-3">
-          <ShieldCheck className="h-4 w-4 text-[var(--success)]" />
-          <span className="font-display text-sm font-bold tracking-tight text-[var(--success)]">Service commitment</span>
+      <div className="mt-4">
+        <div className="mb-1 flex items-center gap-2 py-2">
+          <span className="font-display text-base font-bold tracking-tight text-[var(--success)]">Service commitment</span>
         </div>
-        {SERVICE_ITEMS.map((it, i) => (
-          <button
-            key={it.title}
-            onClick={() => setOpenIdx(i)}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-[var(--success)]/10"
-          >
-            <it.icon className="h-4 w-4 shrink-0 text-[var(--success)]" />
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-bold text-foreground">{it.title}</div>
-              <div className="truncate text-xs text-muted-foreground">{it.subtitle}</div>
-            </div>
-            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-          </button>
-        ))}
+        <div className="divide-y divide-border/60">
+          {SERVICE_ITEMS.map((it, i) => (
+            <button
+              key={it.title}
+              onClick={() => setOpenIdx(i)}
+              className="flex w-full items-center gap-3 py-3 text-left transition hover:opacity-80"
+            >
+              <it.icon className="h-4 w-4 shrink-0 text-[var(--success)]" />
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-bold text-foreground">{it.title}</div>
+                <div className="truncate text-xs text-muted-foreground">{it.subtitle}</div>
+              </div>
+              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+            </button>
+          ))}
+        </div>
       </div>
 
       {active && (
