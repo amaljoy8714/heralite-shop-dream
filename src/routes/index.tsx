@@ -239,19 +239,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-[var(--primary-deep)] py-16 text-center text-white md:py-20">
-        <div className="mx-auto max-w-2xl px-5 md:px-6">
-          <h2 className="font-display text-3xl font-bold md:text-5xl">Bring home the calm.</h2>
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/70 md:text-base">
-            Join 1,500+ homes already living a little quieter.
-          </p>
-          <a href="#collection" className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-[var(--primary-deep)] transition hover:-translate-y-0.5">
-            Shop the Collection <ArrowRight className="h-3.5 w-3.5" />
-          </a>
-        </div>
-      </section>
-
       <Footer />
     </div>
   );
