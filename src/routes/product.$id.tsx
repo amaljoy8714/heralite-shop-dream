@@ -524,7 +524,7 @@ function ProductPage({ product }: { product: Product }) {
 
       {/* Description */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
-        <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
+        <div className="py-2">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Product description</h2>
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <div>
@@ -552,6 +552,55 @@ function ProductPage({ product }: { product: Product }) {
           </div>
         </div>
       </section>
+
+      {/* Why HeraLite */}
+      <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
+        <div className="py-2">
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">Our promise</span>
+          <h2 className="mt-2 font-display text-2xl font-bold md:text-3xl">Why HeraLite?</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            We believe your space should feel as good as it looks. Every HeraLite product is designed to bring calm, light, and balance into your everyday life.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
+        <div className="py-2">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">Frequently asked questions</h2>
+          <div className="mt-6 divide-y">
+            {faqs.map((f, i) => (
+              <div key={i}>
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="flex w-full items-center justify-between py-4 text-left text-base font-semibold hover:text-primary"
+                >
+                  <span>{f.q}</span>
+                  <span className="ml-4 text-2xl text-primary">{openFaq === i ? "−" : "+"}</span>
+                </button>
+                {openFaq === i && (
+                  <p className="pb-4 text-base leading-relaxed text-muted-foreground">{f.a}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section id="reviews" className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
+        <div className="py-2">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">Customer reviews</h2>
+          <div className="mt-6 grid gap-8 md:grid-cols-3">
+            <div className="py-2">
+              <div className="font-display text-5xl font-bold text-primary">{product.rating}</div>
+              <div className="mt-1 flex">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className={`h-5 w-5 ${i < Math.round(product.rating) ? "fill-[var(--gold)] text-[var(--gold)]" : "text-muted"}`} />
+                ))}
+              </div>
+              <div className="mt-1 text-sm text-muted-foreground">Loved by customers</div>
+            </div>
 
       {/* Why HeraLite */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
