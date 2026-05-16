@@ -229,7 +229,7 @@ function ProductPage({ product }: { product: Product }) {
   }, [lightboxOpen]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Header />
 
       <div className="mx-auto max-w-7xl px-4 py-3 text-xs text-muted-foreground md:px-6 md:py-4 md:text-sm">
