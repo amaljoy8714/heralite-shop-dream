@@ -370,12 +370,14 @@ function ProductPage({ product }: { product: Product }) {
               </div>
             )}
 
-            <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-3 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
-              Add to Cart
-            </button>
-            <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-3 text-base font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
-              Buy Now
-            </button>
+            <div className="hidden md:block">
+              <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-3 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
+                Add to Cart
+              </button>
+              <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-3 text-base font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
+                Buy Now
+              </button>
+            </div>
 
             {/* Trust row */}
             <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4 text-center">
