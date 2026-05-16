@@ -17,6 +17,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as OrdersOrderIdRouteImport } from './routes/orders.$orderId'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin.reviews'
 
 const TrackRoute = TrackRouteImport.update({
@@ -58,11 +59,16 @@ const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
   path: '/$orderId',
   getParentRoute: () => OrdersRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAdminReviewsRoute =
   AuthenticatedAdminReviewsRouteImport.update({
-    id: '/admin/reviews',
-    path: '/admin/reviews',
-    getParentRoute: () => AuthenticatedRoute,
+    id: '/reviews',
+    path: '/reviews',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/orders': typeof OrdersRouteWithChildren
   '/track': typeof TrackRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/orders/$orderId': typeof OrdersOrderIdRoute
   '/product/$id': typeof ProductIdRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/orders': typeof OrdersRouteWithChildren
   '/track': typeof TrackRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/orders/$orderId': typeof OrdersOrderIdRoute
   '/product/$id': typeof ProductIdRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/orders': typeof OrdersRouteWithChildren
   '/track': typeof TrackRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/orders/$orderId': typeof OrdersOrderIdRoute
   '/product/$id': typeof ProductIdRoute
   '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/orders'
     | '/track'
+    | '/admin'
     | '/orders/$orderId'
     | '/product/$id'
     | '/admin/reviews'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/orders'
     | '/track'
+    | '/admin'
     | '/orders/$orderId'
     | '/product/$id'
     | '/admin/reviews'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/orders'
     | '/track'
+    | '/_authenticated/admin'
     | '/orders/$orderId'
     | '/product/$id'
     | '/_authenticated/admin/reviews'
@@ -199,22 +211,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersOrderIdRouteImport
       parentRoute: typeof OrdersRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/reviews': {
       id: '/_authenticated/admin/reviews'
-      path: '/admin/reviews'
+      path: '/reviews'
       fullPath: '/admin/reviews'
       preLoaderRoute: typeof AuthenticatedAdminReviewsRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
   }
 }
 
-interface AuthenticatedRouteChildren {
+interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
 }
 
-const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -244,13 +274,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

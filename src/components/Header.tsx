@@ -77,11 +77,18 @@ export function Header() {
                 </Link>
               </DropdownMenuItem>
               {isAdmin && (
-                <DropdownMenuItem asChild>
-                  <Link to="/admin/reviews" className="flex items-center gap-2 cursor-pointer">
-                    <Shield className="h-4 w-4" /> Admin · Reviews
-                  </Link>
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
+                      <Shield className="h-4 w-4" /> Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin/reviews" className="flex items-center gap-2 cursor-pointer">
+                      <Shield className="h-4 w-4" /> Admin · Reviews
+                    </Link>
+                  </DropdownMenuItem>
+                </>
               )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signOut()} className="text-destructive cursor-pointer">
