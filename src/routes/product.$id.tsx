@@ -132,6 +132,74 @@ const faqs = [
   { q: "What if I’m not happy with my order?", a: "We offer a hassle-free 30-day return policy. Contact us and we’ll make it right." },
 ];
 
+type ServiceItem = { icon: typeof Truck; title: string; subtitle: string; body: string };
+const SERVICE_ITEMS: ServiceItem[] = [
+  { icon: Truck, title: "Free shipping worldwide", subtitle: "Delivery in 3–7 business days", body: "Every order ships free and arrives within 3–7 business days with full tracking. We dispatch from our nearest fulfillment hub to keep your delivery fast and safe." },
+  { icon: Zap, title: "Fast dispatch", subtitle: "Ships within 1 business day", body: "Orders placed before 5pm are packed and shipped the next business day. You'll receive a tracking link by email as soon as your parcel leaves the studio." },
+  { icon: Undo2, title: "Free returns within 30 days", subtitle: "Hassle-free refunds", body: "Not in love? Return your order within 30 days for a full refund. No restocking fees, no awkward questions — just a smooth refund to your original payment." },
+  { icon: Lock, title: "Security & Privacy", subtitle: "Safe payments · Secure details", body: "Payments are encrypted end-to-end and processed by PCI-compliant providers. Your personal details are never shared with third parties." },
+];
+
+function ServiceCommitmentList() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const active = openIdx !== null ? SERVICE_ITEMS[openIdx] : null;
+  return (
+    <>
+      <div className="mt-4 divide-y divide-[var(--success)]/15 rounded-2xl border border-[var(--success)]/20 bg-[var(--success)]/5">
+        <div className="flex items-center gap-2 px-4 py-3">
+          <ShieldCheck className="h-4 w-4 text-[var(--success)]" />
+          <span className="font-display text-sm font-bold tracking-tight text-[var(--success)]">Service commitment</span>
+        </div>
+        {SERVICE_ITEMS.map((it, i) => (
+          <button
+            key={it.title}
+            onClick={() => setOpenIdx(i)}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-[var(--success)]/10"
+          >
+            <it.icon className="h-4 w-4 shrink-0 text-[var(--success)]" />
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-bold text-foreground">{it.title}</div>
+              <div className="truncate text-xs text-muted-foreground">{it.subtitle}</div>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+          </button>
+        ))}
+      </div>
+
+      {active && (
+        <div className="fixed inset-0 z-[80] flex items-end justify-center" onClick={() => setOpenIdx(null)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in" />
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-t-3xl bg-card p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl animate-in slide-in-from-bottom"
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--success)]/15">
+                <active.icon className="h-4 w-4 text-[var(--success)]" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="font-display text-base font-bold text-foreground">{active.title}</div>
+                <div className="text-xs text-muted-foreground">{active.subtitle}</div>
+              </div>
+              <button onClick={() => setOpenIdx(null)} className="rounded-full p-1.5 text-muted-foreground hover:bg-muted">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{active.body}</p>
+            <button
+              onClick={() => setOpenIdx(null)}
+              className="mt-5 w-full rounded-full bg-[var(--primary-deep)] py-3 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition hover:bg-primary"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function FlashOfferCard({ price, oldPrice }: { price: number; oldPrice: number }) {
   // 6-hour countdown that persists per browser session
   const DURATION = 6 * 60 * 60 * 1000;
