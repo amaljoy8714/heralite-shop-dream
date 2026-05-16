@@ -380,11 +380,6 @@ function ProductPage({ product }: { product: Product }) {
             </ul>
           </div>
 
-          <ul className="mt-5 space-y-2.5 text-base">
-            {product.bullets.map((b) => (
-              <li key={b} className="flex gap-2"><Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" /><span>{b}</span></li>
-            ))}
-          </ul>
 
           {/* Bundle picker — premium */}
           <div className="mt-7 rounded-2xl border border-[var(--gold)]/40 bg-gradient-to-br from-[var(--gold)]/8 via-white to-accent/20 p-4 shadow-[0_8px_30px_-12px_oklch(0.62_0.22_295/0.25)]">
