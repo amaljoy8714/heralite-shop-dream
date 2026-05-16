@@ -524,7 +524,7 @@ function ProductPage({ product }: { product: Product }) {
 
       {/* Description */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
-        <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
+        <div className="py-2">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Product description</h2>
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <div>
@@ -555,7 +555,7 @@ function ProductPage({ product }: { product: Product }) {
 
       {/* Why HeraLite */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
-        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-accent/40 via-white to-secondary/40 p-8 md:p-12 shadow-[var(--shadow-soft)]">
+        <div className="py-2">
           <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">Our promise</span>
           <h2 className="mt-2 font-display text-2xl font-bold md:text-3xl">Why HeraLite?</h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
@@ -566,7 +566,7 @@ function ProductPage({ product }: { product: Product }) {
 
       {/* FAQ */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
-        <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
+        <div className="py-2">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Frequently asked questions</h2>
           <div className="mt-6 divide-y">
             {faqs.map((f, i) => (
@@ -589,10 +589,10 @@ function ProductPage({ product }: { product: Product }) {
 
       {/* Reviews */}
       <section id="reviews" className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
-        <div className="rounded-2xl border bg-card p-6 md:p-10 shadow-[var(--shadow-soft)]">
+        <div className="py-2">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Customer reviews</h2>
           <div className="mt-6 grid gap-8 md:grid-cols-3">
-            <div className="rounded-xl border bg-secondary/40 p-5">
+            <div className="py-2">
               <div className="font-display text-5xl font-bold text-primary">{product.rating}</div>
               <div className="mt-1 flex">
                 {Array.from({ length: 5 }).map((_, i) => (
