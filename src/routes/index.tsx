@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Sparkles, Heart, Leaf, Award, Star, Truck, ShieldCheck, MessageCircle, Quote, ArrowRight } from "lucide-react";
+import { Sparkles, Heart, Leaf, Award, Star, Truck, ShieldCheck, MessageCircle, ArrowRight, BadgeX } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
