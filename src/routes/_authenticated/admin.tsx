@@ -113,7 +113,8 @@ function AdminProducts() {
   const { data: products, refetch } = useProducts();
 
   const toggle = async (id: string, field: "active" | "in_stock", current: boolean) => {
-    const { error } = await supabase.from("products").update({ [field]: !current }).eq("id", id);
+    const update = { [field]: !current } as { active?: boolean; in_stock?: boolean };
+    const { error } = await supabase.from("products").update(update).eq("id", id);
     if (error) toast.error(error.message); else { toast.success("Updated"); refetch(); }
   };
 
