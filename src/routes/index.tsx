@@ -3,6 +3,7 @@ import { Sparkles, Heart, Leaf, Award, Star, Truck, ShieldCheck, MessageCircle }
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
+import { usePriceOverrides } from "@/lib/products-db";
 
 export const Route = createFileRoute("/")({
   head: () => ({
