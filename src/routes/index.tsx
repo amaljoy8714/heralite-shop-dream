@@ -51,67 +51,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Full Collection */}
-      <section id="collection" className="bg-gradient-to-b from-white via-secondary/20 to-white py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-5 md:px-6">
-          <div className="mb-10 flex flex-col items-center text-center md:mb-14">
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">The Collection</span>
-            <h2 className="mt-3 font-display text-3xl font-bold text-[var(--primary-deep)] md:text-5xl">Every piece in the maison.</h2>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              Hand-finished diffusers and ambient lights — each one a small ritual for a quieter home.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-7 lg:grid-cols-4">
-            {ALL_PRODUCTS.map((p, idx) => {
-              const isMain = p.id === mainProduct.id;
-              const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
-              return (
-                <Link
-                  key={p.id}
-                  to={isMain ? "/product/$id" : "/product/$id"}
-                  params={{ id: p.id }}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-[0_2px_12px_rgba(20,20,40,0.04)] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[var(--shadow-card)]"
-                  style={{ animation: `fade-in 0.6s ease-out ${idx * 60}ms backwards` }}
-                >
-                  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-secondary/40 via-white to-secondary/20">
-                    <img
-                      src={p.image}
-                      alt={p.title}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute left-2 top-2 flex flex-col gap-1.5">
-                      {p.badge && (
-                        <span className="rounded-full bg-[var(--primary-deep)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
-                          {p.badge}
-                        </span>
-                      )}
-                      {discount > 0 && (
-                        <span className="rounded-full bg-[var(--gold)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--primary-deep)] shadow-sm">
-                          -{discount}%
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex flex-1 flex-col p-3.5 md:p-4">
-                    <h3 className="line-clamp-2 text-[12.5px] font-semibold leading-snug text-[var(--primary-deep)] md:text-sm">
-                      {p.title}
-                    </h3>
-                    <div className="mt-auto flex items-baseline gap-2 pt-3">
-                      <span className="font-display text-base font-bold text-[var(--primary-deep)] md:text-lg">${p.price.toFixed(2)}</span>
-                      <span className="text-[11px] text-muted-foreground line-through">${p.oldPrice.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Suggested / Hand-picked for You */}
-      <section className="relative overflow-hidden border-y border-border bg-gradient-to-br from-[#fdf6ec] via-white to-[#f3ecff] py-16 md:py-20">
+      <section id="collection" className="relative overflow-hidden border-y border-border bg-gradient-to-br from-[#fdf6ec] via-white to-[#f3ecff] py-16 md:py-20">
         <div className="pointer-events-none absolute -left-16 top-10 h-56 w-56 rounded-full bg-[var(--gold)]/15 blur-3xl" />
         <div className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
 
@@ -126,8 +67,8 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-            {ALL_PRODUCTS.slice(1, 5).map((p, idx) => {
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+            {ALL_PRODUCTS.map((p, idx) => {
               const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
               return (
                 <Link
@@ -135,11 +76,13 @@ function HomePage() {
                   to="/product/$id"
                   params={{ id: p.id }}
                   className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/60 bg-white/70 shadow-[0_4px_20px_rgba(20,20,40,0.06)] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]"
-                  style={{ animation: `fade-in 0.6s ease-out ${idx * 80}ms backwards` }}
+                  style={{ animation: `fade-in 0.6s ease-out ${idx * 60}ms backwards` }}
                 >
-                  <div className="absolute right-2 top-2 z-10 rounded-full bg-[var(--primary-deep)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md">
-                    Picked
-                  </div>
+                  {p.badge && (
+                    <div className="absolute right-2 top-2 z-10 rounded-full bg-[var(--primary-deep)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md">
+                      {p.badge}
+                    </div>
+                  )}
                   <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-white via-secondary/30 to-white">
                     <img src={p.image} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     {discount > 0 && (
