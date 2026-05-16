@@ -14,32 +14,233 @@ export type Database = {
   }
   public: {
     Tables: {
-      products: {
+      customers: {
         Row: {
-          avg_rating: number
+          created_at: string
+          default_address: Json | null
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_address?: Json | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_address?: Json | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
           created_at: string
           id: string
+          image: string | null
+          order_id: string
+          product_id: string | null
+          qty: number
+          title: string
+          unit_price_cents: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image?: string | null
+          order_id: string
+          product_id?: string | null
+          qty: number
+          title: string
+          unit_price_cents: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image?: string | null
+          order_id?: string
+          product_id?: string | null
+          qty?: number
+          title?: string
+          unit_price_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          currency: string
+          email: string
+          estimated_delivery: string | null
+          full_name: string | null
+          id: string
+          notes: string | null
+          order_number: string | null
+          paid_at: string | null
+          payment_method: string | null
+          phone: string | null
+          placed_at: string
+          shipping_address: Json
+          shipping_cents: number
+          status: string
+          stripe_payment_intent: string | null
+          stripe_session_id: string | null
+          subtotal_cents: number
+          tax_cents: number
+          timeline: Json
+          total_cents: number
+          tracking_number: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          email: string
+          estimated_delivery?: string | null
+          full_name?: string | null
+          id?: string
+          notes?: string | null
+          order_number?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          phone?: string | null
+          placed_at?: string
+          shipping_address?: Json
+          shipping_cents?: number
+          status?: string
+          stripe_payment_intent?: string | null
+          stripe_session_id?: string | null
+          subtotal_cents?: number
+          tax_cents?: number
+          timeline?: Json
+          total_cents?: number
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          email?: string
+          estimated_delivery?: string | null
+          full_name?: string | null
+          id?: string
+          notes?: string | null
+          order_number?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          phone?: string | null
+          placed_at?: string
+          shipping_address?: Json
+          shipping_cents?: number
+          status?: string
+          stripe_payment_intent?: string | null
+          stripe_session_id?: string | null
+          subtotal_cents?: number
+          tax_cents?: number
+          timeline?: Json
+          total_cents?: number
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          active: boolean
+          avg_rating: number
+          brand: string
+          bullets: Json
+          category: string | null
+          created_at: string
+          currency: string
+          description: string
+          id: string
+          images: Json
+          in_stock: boolean
           name: string
+          old_price_cents: number | null
+          price_cents: number
           rating_breakdown: Json
           slug: string
+          sort_order: number
+          specs: Json
+          stock: number
+          thumb: string | null
           total_reviews: number
         }
         Insert: {
+          active?: boolean
           avg_rating?: number
+          brand?: string
+          bullets?: Json
+          category?: string | null
           created_at?: string
+          currency?: string
+          description?: string
           id?: string
+          images?: Json
+          in_stock?: boolean
           name: string
+          old_price_cents?: number | null
+          price_cents?: number
           rating_breakdown?: Json
           slug: string
+          sort_order?: number
+          specs?: Json
+          stock?: number
+          thumb?: string | null
           total_reviews?: number
         }
         Update: {
+          active?: boolean
           avg_rating?: number
+          brand?: string
+          bullets?: Json
+          category?: string | null
           created_at?: string
+          currency?: string
+          description?: string
           id?: string
+          images?: Json
+          in_stock?: boolean
           name?: string
+          old_price_cents?: number | null
+          price_cents?: number
           rating_breakdown?: Json
           slug?: string
+          sort_order?: number
+          specs?: Json
+          stock?: number
+          thumb?: string | null
           total_reviews?: number
         }
         Relationships: []
