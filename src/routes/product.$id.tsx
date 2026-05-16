@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, X, ChevronLeft, ChevronRight, PackageX, BellRing, ArrowLeft } from "lucide-react";
+import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, X, ChevronLeft, ChevronRight, PackageX, BellRing, ArrowLeft, Zap, Flame } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
@@ -131,6 +131,62 @@ const faqs = [
   { q: "What’s included in the box?", a: "1× HeraLite Cloud Rain Humidifier, 1× USB-C cable, and a quick-start guide." },
   { q: "What if I’m not happy with my order?", a: "We offer a hassle-free 30-day return policy. Contact us and we’ll make it right." },
 ];
+
+function FlashOfferCard({ price, oldPrice }: { price: number; oldPrice: number }) {
+  // 6-hour countdown that persists per browser session
+  const DURATION = 6 * 60 * 60 * 1000;
+  const [endsAt] = useState(() => {
+    if (typeof window === "undefined") return Date.now() + DURATION;
+    const key = "heralite_flash_offer_ends";
+    const stored = Number(window.localStorage.getItem(key));
+    if (stored && stored > Date.now()) return stored;
+    const next = Date.now() + DURATION;
+    window.localStorage.setItem(key, String(next));
+    return next;
+  });
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const diff = Math.max(0, endsAt - now);
+  const hh = String(Math.floor(diff / 3_600_000)).padStart(2, "0");
+  const mm = String(Math.floor((diff % 3_600_000) / 60_000)).padStart(2, "0");
+  const ss = String(Math.floor((diff % 60_000) / 1000)).padStart(2, "0");
+  const pct = Math.round(((oldPrice - price) / oldPrice) * 100);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-white to-[var(--gold)]/10 shadow-[0_10px_30px_-14px_oklch(0.62_0.22_295/0.35)]">
+      <div className="flex items-center justify-between bg-gradient-to-r from-primary to-[var(--primary-deep)] px-4 py-2.5 text-white">
+        <div className="flex items-center gap-2">
+          <Flame className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" />
+          <span className="font-display text-base font-bold tracking-tight">Flash Offer</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.15em]">
+          <span className="opacity-80">Ends in</span>
+          <span className="rounded-md bg-black/30 px-1.5 py-0.5 font-mono tabular-nums">{hh}</span>
+          <span className="opacity-70">:</span>
+          <span className="rounded-md bg-black/30 px-1.5 py-0.5 font-mono tabular-nums">{mm}</span>
+          <span className="opacity-70">:</span>
+          <span className="rounded-md bg-black/30 px-1.5 py-0.5 font-mono tabular-nums">{ss}</span>
+        </div>
+      </div>
+      <div className="px-4 py-4">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="font-display text-4xl font-bold text-[var(--primary-deep)]">${price.toFixed(2)}</span>
+          <span className="text-base text-muted-foreground line-through">${oldPrice.toFixed(2)}</span>
+          <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-destructive">
+            −{pct}% off
+          </span>
+        </div>
+        <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Zap className="h-3.5 w-3.5 text-[var(--gold)]" />
+          <span>Launch week price — back to <span className="font-semibold text-foreground">${oldPrice.toFixed(2)}</span> when the timer ends.</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ProductPage({ product }: { product: Product }) {
   const [activeImg, setActiveImg] = useState(0);
@@ -285,8 +341,9 @@ function ProductPage({ product }: { product: Product }) {
 
           <hr className="my-4" />
 
-          <div className="flex flex-wrap items-baseline gap-3">
-            <span className="font-display text-4xl font-bold text-primary">${product.price}</span>
+          <FlashOfferCard price={product.price} oldPrice={product.oldPrice} />
+
+          <div className="mt-3">
             <span className="rounded-full bg-[var(--success)]/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--success)]">
               Free Shipping Included
             </span>
