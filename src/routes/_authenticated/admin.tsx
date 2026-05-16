@@ -5,7 +5,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useMyOrders } from "@/lib/orders-db";
 import { useAuth } from "@/lib/auth";
-import { useProducts } from "@/lib/products-db";
+import { useQuery } from "@tanstack/react-query";
+import { resolveAsset } from "@/lib/asset-resolver";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
