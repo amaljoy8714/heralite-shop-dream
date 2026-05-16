@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, MapPin, PackageSearch, User, LogOut, Package, Shield, LogIn } from "lucide-react";
+import { ShoppingCart, MapPin, PackageSearch, User, LogOut, Package, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCart, cartCount } from "@/lib/cart";
 import { useAuth, signOut } from "@/lib/auth";
