@@ -110,6 +110,58 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Suggested / Hand-picked for You */}
+      <section className="relative overflow-hidden border-y border-border bg-gradient-to-br from-[#fdf6ec] via-white to-[#f3ecff] py-16 md:py-20">
+        <div className="pointer-events-none absolute -left-16 top-10 h-56 w-56 rounded-full bg-[var(--gold)]/15 blur-3xl" />
+        <div className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
+
+        <div className="relative mx-auto max-w-6xl px-5 md:px-6">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--primary-deep)]/15 bg-white/80 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.35em] text-[var(--primary-deep)] backdrop-blur">
+              <Sparkles className="h-3 w-3 text-primary" /> Hand-picked for You
+            </span>
+            <h2 className="mt-4 font-display text-3xl font-bold text-[var(--primary-deep)] md:text-5xl">You may also love.</h2>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+              A curated edit of pieces our customers reach for again and again.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            {ALL_PRODUCTS.slice(1, 5).map((p, idx) => {
+              const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+              return (
+                <Link
+                  key={`suggest-${p.id}`}
+                  to="/product/$id"
+                  params={{ id: p.id }}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/60 bg-white/70 shadow-[0_4px_20px_rgba(20,20,40,0.06)] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]"
+                  style={{ animation: `fade-in 0.6s ease-out ${idx * 80}ms backwards` }}
+                >
+                  <div className="absolute right-2 top-2 z-10 rounded-full bg-[var(--primary-deep)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md">
+                    Picked
+                  </div>
+                  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-white via-secondary/30 to-white">
+                    <img src={p.image} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    {discount > 0 && (
+                      <span className="absolute left-2 top-2 rounded-full bg-[var(--gold)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--primary-deep)] shadow-sm">
+                        -{discount}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-1 flex-col p-3.5 md:p-4">
+                    <h3 className="line-clamp-2 text-[12.5px] font-semibold leading-snug text-[var(--primary-deep)] md:text-sm">{p.title}</h3>
+                    <div className="mt-auto flex items-baseline gap-2 pt-3">
+                      <span className="font-display text-base font-bold text-[var(--primary-deep)] md:text-lg">${p.price.toFixed(2)}</span>
+                      <span className="text-[11px] text-muted-foreground line-through">${p.oldPrice.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* 1500+ Happy Customers — premium colourful */}
       <section className="relative overflow-hidden border-y border-border py-16 md:py-24">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#1a1b3a] via-[#2d1b4e] to-[#1e3a5f]" />
