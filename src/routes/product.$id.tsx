@@ -4,6 +4,7 @@ import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, U
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
+import { usePriceOverrides } from "@/lib/products-db";
 import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
 
