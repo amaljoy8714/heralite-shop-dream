@@ -132,8 +132,7 @@ const faqs = [
   { q: "What if I’m not happy with my order?", a: "We offer a hassle-free 30-day return policy. Contact us and we’ll make it right." },
 ];
 
-function ProductPage() {
-  const product: Product = mainProduct;
+function ProductPage({ product }: { product: Product }) {
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [bundle, setBundle] = useState<1 | 2 | 3>(1);
