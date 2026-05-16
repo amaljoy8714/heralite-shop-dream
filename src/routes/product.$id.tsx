@@ -522,6 +522,7 @@ function ProductPage({ product }: { product: Product }) {
         </aside>
       </div>
 
+      <SectionGap />
       {/* Description */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
         <div className="py-2">
@@ -553,6 +554,7 @@ function ProductPage({ product }: { product: Product }) {
         </div>
       </section>
 
+      <SectionGap />
       {/* Why HeraLite */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
         <div className="py-2">
@@ -564,6 +566,7 @@ function ProductPage({ product }: { product: Product }) {
         </div>
       </section>
 
+      <SectionGap />
       {/* FAQ */}
       <section className="mx-auto max-w-7xl px-4 pb-10 md:px-6">
         <div className="py-2">
@@ -587,6 +590,7 @@ function ProductPage({ product }: { product: Product }) {
         </div>
       </section>
 
+      <SectionGap />
       {/* Reviews */}
       <section id="reviews" className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
         <div className="py-2">
