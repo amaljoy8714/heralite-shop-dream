@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Sparkles, Heart, Leaf, Award, Star, Truck, ShieldCheck, MessageCircle, BadgeX } from "lucide-react";
-import { toast } from "sonner";
+import { Sparkles, Heart, Leaf, Award, Star, Truck, ShieldCheck, MessageCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
@@ -186,28 +185,10 @@ function HomePage() {
               const className = "group relative flex flex-col overflow-hidden rounded-2xl border border-white/60 bg-white/70 text-left shadow-[0_4px_20px_rgba(20,20,40,0.06)] backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]";
               const style = { animation: `fade-in 0.6s ease-out ${idx * 60}ms backwards` } as const;
 
-              if (isMain) {
-                return (
-                  <Link key={`p-${p.id}`} to="/product/$id" params={{ id: p.id }} className={className} style={style}>
-                    {cardInner}
-                  </Link>
-                );
-              }
               return (
-                <button
-                  key={`p-${p.id}`}
-                  type="button"
-                  onClick={() =>
-                    toast.error("Sold Out", {
-                      description: "This piece is currently unavailable. Restock coming soon.",
-                      icon: <BadgeX className="h-4 w-4" />,
-                    })
-                  }
-                  className={className}
-                  style={style}
-                >
+                <Link key={`p-${p.id}`} to="/product/$id" params={{ id: p.id }} className={className} style={style}>
                   {cardInner}
-                </button>
+                </Link>
               );
             })}
           </div>

@@ -1,9 +1,9 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, Undo2, X, ChevronLeft, ChevronRight, PackageX, BellRing, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { mainProduct, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
+import { mainProduct, soldOutProducts, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
 
@@ -16,9 +16,11 @@ export const Route = createFileRoute("/product/$id")({
     ],
   }),
   beforeLoad: ({ params }) => {
-    if (params.id !== mainProduct.id) throw notFound();
+    const isMain = params.id === mainProduct.id;
+    const isSoldOut = soldOutProducts.some((p) => p.id === params.id);
+    if (!isMain && !isSoldOut) throw notFound();
   },
-  component: ProductPage,
+  component: ProductRouter,
   notFoundComponent: () => (
     <div className="min-h-screen"><Header /><div className="mx-auto max-w-3xl p-10 text-center">
       <h1 className="font-display text-3xl">Product not found</h1>
@@ -26,6 +28,93 @@ export const Route = createFileRoute("/product/$id")({
     </div></div>
   ),
 });
+
+function ProductRouter() {
+  const { id } = Route.useParams();
+  const soldOut = soldOutProducts.find((p) => p.id === id);
+  if (soldOut) return <SoldOutPage product={soldOut} />;
+  return <ProductPage />;
+}
+
+function SoldOutPage({ product }: { product: typeof soldOutProducts[number] }) {
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-16">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground transition hover:text-primary">
+          <ArrowLeft className="h-3.5 w-3.5" /> Back to collection
+        </Link>
+
+        <div className="mt-6 grid items-center gap-8 md:grid-cols-2 md:gap-12">
+          <div className="relative">
+            <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-gradient-to-br from-primary/15 via-transparent to-[var(--gold)]/15 blur-3xl" />
+            <div className="relative aspect-square overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-secondary/30 via-white to-secondary/10 shadow-[var(--shadow-card)]">
+              <img src={product.image} alt={product.title} className="absolute inset-0 h-full w-full object-cover grayscale-[0.35]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-center p-5">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.3em] text-[var(--primary-deep)] shadow-lg backdrop-blur">
+                  <PackageX className="h-3.5 w-3.5 text-destructive" /> Sold Out
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-destructive/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-destructive">
+              <PackageX className="h-3 w-3" /> Currently Unavailable
+            </span>
+            <h1 className="mt-4 font-display text-3xl font-bold leading-tight text-[var(--primary-deep)] md:text-4xl">
+              {product.title}
+            </h1>
+            <div className="mt-4 flex items-baseline gap-3">
+              <span className="font-display text-3xl font-bold text-[var(--primary-deep)] md:text-4xl">${product.price.toFixed(2)}</span>
+              <span className="text-base text-muted-foreground line-through">${product.oldPrice.toFixed(2)}</span>
+            </div>
+            <p className="mt-5 text-sm leading-relaxed text-muted-foreground md:text-base">
+              This piece sold out fast. We&rsquo;re crafting the next batch in our studio — leave us a note and we&rsquo;ll let you know the moment it&rsquo;s back.
+            </p>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <button
+                onClick={() =>
+                  toast.success("You&rsquo;re on the list", {
+                    description: "We&rsquo;ll email you the second this piece is back in stock.",
+                  })
+                }
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--primary-deep)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.25em] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 hover:bg-primary"
+              >
+                <BellRing className="h-3.5 w-3.5" /> Notify Me When Back
+              </button>
+              <Link
+                to="/product/$id"
+                params={{ id: mainProduct.id }}
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--primary-deep)]/20 bg-white px-6 py-3 text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--primary-deep)] transition hover:-translate-y-0.5 hover:bg-secondary/40"
+              >
+                Shop our Bestseller
+              </Link>
+            </div>
+
+            <div className="mt-8 grid grid-cols-3 gap-3 border-t border-border pt-6 text-center">
+              <div>
+                <Truck className="mx-auto h-4 w-4 text-primary" />
+                <div className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Free Ship</div>
+              </div>
+              <div>
+                <ShieldCheck className="mx-auto h-4 w-4 text-primary" />
+                <div className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Secure</div>
+              </div>
+              <div>
+                <Undo2 className="mx-auto h-4 w-4 text-primary" />
+                <div className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">30-Day Returns</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+}
 
 const faqs = [
   { q: "How long does the water last?", a: "The 230ml tank runs for 6–8 hours on a full fill — perfect for a full night’s sleep." },

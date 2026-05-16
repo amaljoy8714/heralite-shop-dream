@@ -5,7 +5,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useMyOrders } from "@/lib/orders-db";
 import { useAuth } from "@/lib/auth";
-import { useProducts } from "@/lib/products-db";
+import { useQuery } from "@tanstack/react-query";
+import { resolveAsset } from "@/lib/asset-resolver";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
@@ -110,7 +111,17 @@ function AdminOrders() {
 }
 
 function AdminProducts() {
-  const { data: products, refetch } = useProducts();
+  const { data: products, refetch, isLoading } = useQuery({
+    queryKey: ["admin-products"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
 
   const toggle = async (id: string, field: "active" | "in_stock", current: boolean) => {
     const update = { [field]: !current } as { active?: boolean; in_stock?: boolean };
@@ -128,11 +139,14 @@ function AdminProducts() {
     if (error) toast.error(error.message); else { toast.success("Stock updated"); refetch(); }
   };
 
+  if (isLoading) return <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+
   return (
     <div className="mt-6 space-y-3">
+      {(products ?? []).length === 0 && <p className="text-muted-foreground">No products found.</p>}
       {(products ?? []).map((p) => (
         <div key={p.id} className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-4">
-          <img src={p.thumb} alt="" className="h-16 w-16 rounded-lg bg-secondary/40 object-contain p-1" />
+          <img src={resolveAsset(p.thumb ?? "")} alt="" className="h-16 w-16 rounded-lg bg-secondary/40 object-contain p-1" />
           <div className="min-w-0 flex-1">
             <div className="line-clamp-1 font-semibold">{p.name}</div>
             <div className="text-xs text-muted-foreground">{p.slug}</div>
