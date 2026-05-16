@@ -49,6 +49,48 @@ export function useProducts() {
   });
 }
 
+// Maps static product IDs (in src/lib/products.ts) → DB slugs
+const STATIC_ID_TO_SLUG: Record<string, string> = {
+  "cloud-rain-humidifier": "cloud-rain-humidifier",
+  s0: "cosmomist-astronaut",
+  s1: "edenmist-raindrop",
+  s2: "lunamist-moon",
+  s3: "lumamist-crystal",
+  s4: "embermist-flame",
+  s5: "zenmist-wood",
+  s6: "umbramist-umbrella",
+  s7: "nordmist-orb",
+  s8: "chromamist-rgb",
+};
+
+export type PriceOverride = { price: number; oldPrice: number };
+
+export function usePriceOverrides() {
+  return useQuery({
+    queryKey: ["price-overrides"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("slug, price_cents, old_price_cents");
+      if (error) throw error;
+      const bySlug = new Map<string, PriceOverride>();
+      for (const row of data ?? []) {
+        bySlug.set(row.slug, {
+          price: (row.price_cents ?? 0) / 100,
+          oldPrice: (row.old_price_cents ?? row.price_cents ?? 0) / 100,
+        });
+      }
+      const byStaticId = new Map<string, PriceOverride>();
+      for (const [staticId, slug] of Object.entries(STATIC_ID_TO_SLUG)) {
+        const o = bySlug.get(slug);
+        if (o) byStaticId.set(staticId, o);
+      }
+      return byStaticId;
+    },
+    staleTime: 30_000,
+  });
+}
+
 export function useProductBySlug(slug: string | undefined) {
   return useQuery({
     enabled: !!slug,
