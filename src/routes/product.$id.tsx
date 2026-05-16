@@ -570,7 +570,6 @@ function ProductPage({ product }: { product: Product }) {
         <div className="mx-auto flex max-w-md items-center gap-2.5">
           <div className="flex min-w-0 flex-col leading-tight">
             <span className="font-display text-lg font-bold text-[var(--primary-deep)]">${effectiveTotal.toFixed(2)}</span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--success)]">In stock · Free ship</span>
           </div>
           <button
             onClick={handleAdd}
