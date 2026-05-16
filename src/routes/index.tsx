@@ -21,6 +21,11 @@ const ALL_PRODUCTS = [
 ];
 
 function HomePage() {
+  const { data: overrides } = usePriceOverrides();
+  const products = ALL_PRODUCTS.map((p) => {
+    const o = overrides?.get(p.id);
+    return o ? { ...p, price: o.price, oldPrice: o.oldPrice } : p;
+  });
   return (
     <div className="min-h-screen bg-background">
       <Header />
