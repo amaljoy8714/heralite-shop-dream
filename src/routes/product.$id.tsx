@@ -565,6 +565,28 @@ function ProductPage({ product }: { product: Product }) {
         </div>
       )}
 
+      {/* Sticky mobile buy bar — premium */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/40 bg-white/85 px-3 py-3 shadow-[0_-12px_40px_-12px_rgba(20,20,40,0.25)] backdrop-blur-xl md:hidden" style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}>
+        <div className="mx-auto flex max-w-md items-center gap-2.5">
+          <div className="flex min-w-0 flex-col leading-tight">
+            <span className="font-display text-lg font-bold text-[var(--primary-deep)]">${effectiveTotal.toFixed(2)}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--success)]">In stock · Free ship</span>
+          </div>
+          <button
+            onClick={handleAdd}
+            className="ml-auto flex-1 rounded-full bg-gradient-to-b from-[var(--gold)] to-[oklch(0.74_0.15_75)] py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--primary-deep)] shadow-[0_8px_20px_-8px_oklch(0.78_0.14_80/0.7)] transition active:translate-y-0.5 active:brightness-95"
+          >
+            Add to Cart
+          </button>
+          <button
+            onClick={handleBuyNow}
+            className="flex-1 rounded-full bg-gradient-to-b from-primary to-[var(--primary-deep)] py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_20px_-8px_oklch(0.45_0.18_295/0.7)] transition active:translate-y-0.5 active:brightness-110"
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
