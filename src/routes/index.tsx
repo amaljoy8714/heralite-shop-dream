@@ -129,66 +129,28 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 1500+ Happy Customers — premium colourful */}
-      <section className="relative overflow-hidden border-y border-border py-16 md:py-24">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#1a1b3a] via-[#2d1b4e] to-[#1e3a5f]" />
-        <div className="pointer-events-none absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-[#e8a87c]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-[#5cbdb9]/20 blur-3xl" />
-        <div className="pointer-events-none absolute left-10 top-1/2 h-64 w-64 rounded-full bg-[#c9a84c]/15 blur-3xl" />
+      {/* 1500+ Happy Customers — compact premium */}
+      <section className="bg-white py-12 md:py-16">
+        <div className="mx-auto max-w-3xl px-5 md:px-6">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#1a1b3a] via-[#2d1b4e] to-[#1e3a5f] p-7 text-center shadow-[0_20px_60px_-20px_rgba(45,27,78,0.5)] md:p-10">
+            <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--gold)]/25 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-[#5cbdb9]/25 blur-3xl" />
 
-        <div className="relative mx-auto max-w-6xl px-5 md:px-6">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.35em] text-white/80 backdrop-blur">
-              <Sparkles className="h-3 w-3 text-[var(--gold)]" /> Loved Worldwide
-            </div>
-            <div className="mt-7 font-display text-7xl font-bold leading-none text-white md:text-9xl">
-              <span className="bg-gradient-to-br from-white via-[#fce7c1] to-[var(--gold)] bg-clip-text text-transparent">1,500+</span>
-            </div>
-            <div className="mt-3 text-sm font-semibold uppercase tracking-[0.4em] text-white/70 md:text-base">Happy Customers</div>
-            <div className="mx-auto mt-6 flex items-center justify-center gap-1.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-[var(--gold)] text-[var(--gold)] drop-shadow-[0_2px_8px_rgba(201,168,76,0.6)]" />
-              ))}
-              <span className="ml-3 text-sm font-bold text-white">4.9 / 5</span>
-            </div>
-          </div>
-
-          {/* Stat cards */}
-          <div className="mt-12 grid gap-4 md:grid-cols-3 md:gap-6">
-            {[
-              { num: "1,500+", label: "Happy Homes", grad: "from-[#e8a87c] to-[#c44569]" },
-              { num: "40+", label: "Countries Shipped", grad: "from-[#5cbdb9] to-[#3b82f6]" },
-              { num: "4.9★", label: "Average Rating", grad: "from-[var(--gold)] to-[#e85d3a]" },
-            ].map((s) => (
-              <div key={s.label} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md transition hover:-translate-y-1 hover:bg-white/10">
-                <div className={`absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br ${s.grad} opacity-40 blur-2xl transition group-hover:opacity-70`} />
-                <div className={`relative font-display text-4xl font-bold bg-gradient-to-br ${s.grad} bg-clip-text text-transparent md:text-5xl`}>{s.num}</div>
-                <div className="relative mt-2 text-[11px] font-bold uppercase tracking-[0.3em] text-white/70">{s.label}</div>
+            <div className="relative flex flex-col items-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.35em] text-white/80 backdrop-blur">
+                <Sparkles className="h-3 w-3 text-[var(--gold)]" /> Loved Worldwide
               </div>
-            ))}
-          </div>
-
-          {/* Testimonials */}
-          <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
-            {[
-              { name: "Aisha K.", city: "London, UK", body: "Genuinely the most calming object in my bedroom. The rain sound puts me to sleep in minutes.", grad: "from-[#e8a87c]/30 to-[#c44569]/20" },
-              { name: "Ryan S.", city: "New York, USA", body: "Beautiful build. Feels premium, looks expensive. Worth every dollar — and then some.", grad: "from-[#5cbdb9]/30 to-[#3b82f6]/20" },
-              { name: "Maya P.", city: "Tokyo, JP", body: "I bought one as a gift and ended up ordering three more. The whole house feels softer.", grad: "from-[var(--gold)]/30 to-[#e85d3a]/20" },
-            ].map((t) => (
-              <div key={t.name} className={`relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${t.grad} p-6 backdrop-blur-md`}>
-                <Quote className="absolute right-4 top-4 h-8 w-8 text-white/15" />
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-[var(--gold)] text-[var(--gold)]" />
-                  ))}
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-white/90">&ldquo;{t.body}&rdquo;</p>
-                <div className="mt-4 border-t border-white/10 pt-3">
-                  <div className="text-sm font-bold text-white">{t.name}</div>
-                  <div className="text-[11px] uppercase tracking-wider text-white/60">{t.city}</div>
-                </div>
+              <div className="mt-4 font-display text-5xl font-bold leading-none md:text-6xl">
+                <span className="bg-gradient-to-br from-white via-[#fce7c1] to-[var(--gold)] bg-clip-text text-transparent">1,500+</span>
               </div>
-            ))}
+              <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/70 md:text-xs">Happy Customers</div>
+              <div className="mt-4 flex items-center gap-1.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)] drop-shadow-[0_2px_8px_rgba(201,168,76,0.6)]" />
+                ))}
+                <span className="ml-2 text-xs font-bold text-white">4.9 / 5</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
