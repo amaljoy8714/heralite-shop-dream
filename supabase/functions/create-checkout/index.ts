@@ -5,7 +5,7 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders, json } from "../_shared/cors.ts";
 
-type Item = { product_id: string; qty: number };
+type Item = { product_id?: string; slug?: string; qty: number };
 type Body = {
   items: Item[];
   email: string;
@@ -39,18 +39,20 @@ serve(async (req) => {
       userId = data.user?.id ?? null;
     }
 
-    // Fetch products from DB (price authority)
-    const ids = body.items.map((i) => i.product_id);
+    // Fetch products from DB (price authority) — match by id or slug
+    const ids = body.items.map((i) => i.product_id).filter(Boolean) as string[];
+    const slugs = body.items.map((i) => i.slug ?? i.product_id).filter(Boolean) as string[];
     const { data: products, error: pErr } = await supabase
       .from("products")
-      .select("id,name,price_cents,currency,thumb,images,in_stock,active")
-      .in("id", ids);
+      .select("id,slug,name,price_cents,currency,thumb,images,in_stock,active")
+      .or(`id.in.(${ids.length ? ids.join(",") : "00000000-0000-0000-0000-000000000000"}),slug.in.(${slugs.join(",")})`);
     if (pErr) throw pErr;
     if (!products?.length) return json({ error: "no valid products" }, { status: 400 });
 
     const lineItems = body.items.map((i) => {
-      const p = products.find((x) => x.id === i.product_id);
-      if (!p) throw new Error(`product ${i.product_id} not found`);
+      const key = i.product_id ?? i.slug;
+      const p = products.find((x) => x.id === key || x.slug === key);
+      if (!p) throw new Error(`product ${key} not found`);
       if (!p.active) throw new Error(`product ${p.name} inactive`);
       return {
         product_id: p.id,
