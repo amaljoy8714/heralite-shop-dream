@@ -52,7 +52,92 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Suggested / Hand-picked for You */}
+      {/* 1500+ Happy Customers — premium showcase */}
+      <section className="bg-white py-14 md:py-20">
+        <div className="mx-auto max-w-4xl px-5 md:px-6">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-[#15162e] via-[#2d1b4e] to-[#1e3a5f] p-8 shadow-[0_30px_80px_-25px_rgba(45,27,78,0.6)] md:p-12">
+            {/* glow orbs */}
+            <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[var(--gold)]/30 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 rounded-full bg-[#5cbdb9]/25 blur-3xl" />
+            <div className="pointer-events-none absolute right-1/3 top-1/3 h-40 w-40 rounded-full bg-[#e8a87c]/20 blur-3xl" />
+            {/* subtle grid */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.08]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)",
+                backgroundSize: "32px 32px",
+              }}
+            />
+
+            <div className="relative flex flex-col items-center text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.4em] text-white/85 backdrop-blur">
+                <Sparkles className="h-3 w-3 text-[var(--gold)]" /> Loved Worldwide
+              </div>
+              <div className="mt-5 font-display text-6xl font-bold leading-none md:text-8xl">
+                <span className="bg-gradient-to-br from-white via-[#fce7c1] to-[var(--gold)] bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(201,168,76,0.3)]">
+                  1,500+
+                </span>
+              </div>
+              <div className="mt-3 text-[11px] font-semibold uppercase tracking-[0.45em] text-white/75 md:text-sm">Happy Customers</div>
+              <div className="mt-5 flex items-center gap-1.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)] drop-shadow-[0_2px_8px_rgba(201,168,76,0.6)] md:h-5 md:w-5" />
+                ))}
+                <span className="ml-2 text-xs font-bold text-white md:text-sm">4.9 / 5</span>
+              </div>
+
+              {/* stat row */}
+              <div className="mt-8 grid w-full grid-cols-3 gap-3 border-t border-white/10 pt-6">
+                {[
+                  { num: "1.5K+", label: "Homes", grad: "from-[#e8a87c] to-[#c44569]" },
+                  { num: "40+", label: "Countries", grad: "from-[#5cbdb9] to-[#3b82f6]" },
+                  { num: "4.9★", label: "Rating", grad: "from-[var(--gold)] to-[#e85d3a]" },
+                ].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <div className={`font-display text-xl font-bold md:text-3xl bg-gradient-to-br ${s.grad} bg-clip-text text-transparent`}>
+                      {s.num}
+                    </div>
+                    <div className="mt-1 text-[9px] font-bold uppercase tracking-[0.25em] text-white/55 md:text-[10px]">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Brand pillars */}
+      <section className="bg-gradient-to-b from-white via-secondary/20 to-white py-16 md:py-20">
+        <div className="mx-auto max-w-6xl px-5 md:px-6">
+          <div className="mb-12 text-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">The HeraLite Promise</span>
+            <h2 className="mt-3 font-display text-3xl font-bold text-[var(--primary-deep)] md:text-5xl">Crafted with intention.</h2>
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+              Three principles guide every object that leaves our studio.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { Icon: Heart, title: "Hand-finished", body: "Every piece is individually inspected before it leaves us. Quality over quantity, always." },
+              { Icon: Leaf, title: "Quietly designed", body: "Soft materials, gentle finishes, calm light. Objects built to belong in the room — not shout in it." },
+              { Icon: Award, title: "Honestly priced", body: "Complimentary worldwide shipping. 30-day returns. Real humans on email. No fine print." },
+            ].map(({ Icon, title, body }) => (
+              <div key={title} className="rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 font-display text-xl font-bold text-[var(--primary-deep)]">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hand-picked products */}
       <section id="collection" className="relative overflow-hidden border-y border-border bg-gradient-to-br from-[#fdf6ec] via-white to-[#f3ecff] py-16 md:py-20">
         <div className="pointer-events-none absolute -left-16 top-10 h-56 w-56 rounded-full bg-[var(--gold)]/15 blur-3xl" />
         <div className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
@@ -125,60 +210,6 @@ function HomePage() {
                 </button>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* 1500+ Happy Customers — compact premium */}
-      <section className="bg-white py-12 md:py-16">
-        <div className="mx-auto max-w-3xl px-5 md:px-6">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#1a1b3a] via-[#2d1b4e] to-[#1e3a5f] p-7 text-center shadow-[0_20px_60px_-20px_rgba(45,27,78,0.5)] md:p-10">
-            <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--gold)]/25 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-[#5cbdb9]/25 blur-3xl" />
-
-            <div className="relative flex flex-col items-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.35em] text-white/80 backdrop-blur">
-                <Sparkles className="h-3 w-3 text-[var(--gold)]" /> Loved Worldwide
-              </div>
-              <div className="mt-4 font-display text-5xl font-bold leading-none md:text-6xl">
-                <span className="bg-gradient-to-br from-white via-[#fce7c1] to-[var(--gold)] bg-clip-text text-transparent">1,500+</span>
-              </div>
-              <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/70 md:text-xs">Happy Customers</div>
-              <div className="mt-4 flex items-center gap-1.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)] drop-shadow-[0_2px_8px_rgba(201,168,76,0.6)]" />
-                ))}
-                <span className="ml-2 text-xs font-bold text-white">4.9 / 5</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Brand pillars */}
-      <section className="bg-white py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-5 md:px-6">
-          <div className="mb-12 text-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">The HeraLite Promise</span>
-            <h2 className="mt-3 font-display text-3xl font-bold text-[var(--primary-deep)] md:text-5xl">Crafted with intention.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              Three principles guide every object that leaves our studio.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { Icon: Heart, title: "Hand-finished", body: "Every piece is individually inspected before it leaves us. Quality over quantity, always." },
-              { Icon: Leaf, title: "Quietly designed", body: "Soft materials, gentle finishes, calm light. Objects built to belong in the room — not shout in it." },
-              { Icon: Award, title: "Honestly priced", body: "Complimentary worldwide shipping. 30-day returns. Real humans on email. No fine print." },
-            ].map(({ Icon, title, body }) => (
-              <div key={title} className="rounded-2xl border border-border bg-secondary/30 p-7 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Icon className="h-6 w-6" />
-                </span>
-                <h3 className="mt-5 font-display text-xl font-bold text-[var(--primary-deep)]">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
