@@ -1,17 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { Trash2, Minus, Plus, ShieldCheck, CheckCircle2, Lock, Crown, ArrowRight, Copy, PackageSearch, Download } from "lucide-react";
+import { Trash2, Minus, Plus, ShieldCheck, Lock, Crown, Loader2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useCart, cartTotal } from "@/lib/cart";
-import { mainProduct, BUNDLE_DISCOUNT } from "@/lib/products";
-import { useOrders, generateTrackingNumber, type Order } from "@/lib/orders";
-import { downloadInvoicePdf } from "@/lib/invoice";
+import { createCheckoutSession } from "@/lib/orders-db";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
   step: z.enum(["cart", "address", "payment"]).optional(),
+  cancelled: z.string().optional(),
 });
 
 export const Route = createFileRoute("/checkout")({
@@ -36,35 +35,25 @@ const addressSchema = z.object({
 });
 
 type AddressForm = z.infer<typeof addressSchema>;
-
-type Step = "cart" | "address" | "payment" | "confirm";
+type Step = "cart" | "address" | "payment";
 
 function CheckoutPage() {
   const search = Route.useSearch();
-  const initial: Step = (search.step as Step) ?? "cart";
   const items = useCart((s) => s.items);
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
   const clear = useCart((s) => s.clear);
-  const addOrder = useOrders((s) => s.add);
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<Step>(initial);
-  const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
-  const [orderId, setOrderId] = useState<string | null>(null);
+  const [step, setStep] = useState<Step>((search.step as Step) ?? "cart");
   const [form, setForm] = useState<AddressForm>({ name: "", phone: "", email: "", address: "", city: "", state: "", zip: "" });
   const [errors, setErrors] = useState<Partial<Record<keyof AddressForm, string>>>({});
-  const [payment, setPayment] = useState<"card" | "paypal">("card");
-  const [card, setCard] = useState({ number: "", name: "", expiry: "", cvc: "" });
+  const [loading, setLoading] = useState(false);
 
   const subtotal = cartTotal(items);
-  const mainItem = items.find((i) => i.id === mainProduct.id);
-  const bundleEligibleQty = mainItem?.qty ?? 0;
-  const bundleSavings = bundleEligibleQty >= 2 ? mainProduct.price * bundleEligibleQty * BUNDLE_DISCOUNT : 0;
-  const shipping = 0;
-  const taxBase = subtotal - bundleSavings;
-  const tax = +(taxBase * 0.07).toFixed(2);
-  const total = +(taxBase + shipping + tax).toFixed(2);
+  const shipping = subtotal >= 50 ? 0 : 4.99;
+  const tax = +(subtotal * 0.08).toFixed(2);
+  const total = +(subtotal + shipping + tax).toFixed(2);
 
   const submitAddress = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,124 +68,39 @@ function CheckoutPage() {
     setStep("payment");
   };
 
-  const placeOrder = () => {
-    const tn = generateTrackingNumber();
-    const oid = "HL" + Date.now().toString().slice(-8);
-    const now = Date.now();
-    const order: Order = {
-      trackingNumber: tn,
-      orderId: oid,
-      customerName: form.name,
-      email: form.email,
-      address: form.address,
-      city: form.city,
-      state: form.state,
-      zip: form.zip,
-      items: items.map((i) => ({ title: i.title, qty: i.qty, price: i.price, image: i.image })),
-      total,
-      placedAt: now,
-      status: "Placed",
-      timeline: [{ status: "Placed", at: now }],
-      estimatedDelivery: "3–7 business days",
-    };
-    addOrder(order);
-    setTrackingNumber(tn);
-    setOrderId(oid);
-    clear();
-    setStep("confirm");
-  };
-
-  const downloadInvoice = () => {
-    if (!trackingNumber || !orderId) return;
-    const order = useOrders.getState().get(trackingNumber);
-    if (!order) return;
+  const placeOrder = async () => {
+    setLoading(true);
     try {
-      downloadInvoicePdf(order);
-      toast.success("Invoice downloaded");
-    } catch {
-      toast.error("Could not generate invoice");
+      const res = await createCheckoutSession({
+        items: items.map((i) => ({ slug: i.id, qty: i.qty })),
+        email: form.email,
+        full_name: form.name,
+        phone: form.phone,
+        shipping_address: {
+          line1: form.address, city: form.city, state: form.state, zip: form.zip, country: "US",
+        },
+      });
+      clear();
+      if (res.mode === "stripe") {
+        window.location.href = res.url;
+      } else {
+        toast.success("Order placed!");
+        navigate({ to: "/orders/$orderId", params: { orderId: res.order_id }, search: { paid: "1" } });
+      }
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const copyTracking = async () => {
-    if (!trackingNumber) return;
-    try {
-      await navigator.clipboard.writeText(trackingNumber);
-      toast.success("Tracking number copied!");
-    } catch {
-      toast.error("Copy failed — please copy manually");
-    }
-  };
-
-  // CONFIRM
-  if (step === "confirm" && orderId && trackingNumber) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[var(--success)]/15">
-            <CheckCircle2 className="h-12 w-12 text-[var(--success)]" />
-          </div>
-          <h1 className="mt-6 font-display text-4xl font-bold">Order placed!</h1>
-          <p className="mt-2 text-muted-foreground">Thank you {form.name}, your order has been confirmed.</p>
-
-          {/* Tracking number card */}
-          <div className="mt-6 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-accent/40 via-white to-secondary/30 p-6 text-left shadow-[var(--shadow-card)]">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              <PackageSearch className="h-4 w-4" /> Your tracking number
-            </div>
-            <div className="mt-3 flex items-center gap-3">
-              <code className="flex-1 break-all rounded-lg bg-white px-4 py-3 font-mono text-lg font-bold text-[var(--primary-deep)] shadow-inner">
-                {trackingNumber}
-              </code>
-              <button
-                onClick={copyTracking}
-                className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-3 text-xs font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110"
-              >
-                <Copy className="h-4 w-4" /> Copy
-              </button>
-            </div>
-            <Link
-              to="/track"
-              search={{ tn: trackingNumber }}
-              className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
-            >
-              Track this order now <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="mt-6 rounded-xl border bg-card p-5 text-left shadow-[var(--shadow-soft)]">
-            <Row label="Order ID" value={orderId} mono />
-            <Row label="Total paid" value={`$${total.toFixed(2)}`} />
-            <Row label="Shipping to" value={`${form.address}, ${form.city}, ${form.state} ${form.zip}`} />
-            <Row label="Estimated delivery" value="3–7 business days" />
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={downloadInvoice}
-              className="group inline-flex items-center gap-2 rounded-full border-2 border-[var(--primary-deep)]/15 bg-white px-6 py-3 text-sm font-bold uppercase tracking-wider text-[var(--primary-deep)] shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[var(--shadow-card)]"
-            >
-              <Download className="h-4 w-4 text-primary transition group-hover:translate-y-0.5" />
-              Download Invoice (PDF)
-            </button>
-            <Link to="/" className="inline-block rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110">
-              Continue Shopping
-            </Link>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  // EMPTY CART
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <div className="mx-auto max-w-xl px-6 py-20 text-center">
           <h1 className="font-display text-3xl font-bold">Your cart is empty</h1>
+          {search.cancelled && <p className="mt-2 text-destructive">Payment was cancelled.</p>}
           <p className="mt-2 text-muted-foreground">Looks like you haven't added anything yet.</p>
           <Link to="/" className="mt-6 inline-block rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground">Start Shopping</Link>
         </div>
@@ -204,8 +108,6 @@ function CheckoutPage() {
       </div>
     );
   }
-
-  const showInvoice = step === "cart";
 
   return (
     <div className="min-h-screen bg-background">
@@ -215,7 +117,6 @@ function CheckoutPage() {
           {step === "cart" ? "Your Cart" : step === "address" ? "Shipping" : "Payment"}
         </h1>
 
-        {/* Steps */}
         <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-semibold">
           {(["cart", "address", "payment"] as const).map((s, i) => {
             const order = ["cart", "address", "payment"];
@@ -231,9 +132,8 @@ function CheckoutPage() {
           })}
         </div>
 
-        <div className={`mt-6 grid gap-6 ${showInvoice ? "lg:grid-cols-3" : ""}`}>
-          <div className={`space-y-6 ${showInvoice ? "lg:col-span-2" : ""}`}>
-            {/* CART */}
+        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
             {step === "cart" && (
               <div className="rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)]">
                 <h2 className="font-display text-xl font-bold">Items in your cart ({items.length})</h2>
@@ -255,30 +155,16 @@ function CheckoutPage() {
                           </button>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-bold">${(it.price * it.qty).toFixed(2)}</div>
-                      </div>
+                      <div className="text-right text-sm font-bold">${(it.price * it.qty).toFixed(2)}</div>
                     </li>
                   ))}
                 </ul>
-
-                {bundleSavings > 0 && (
-                  <div className="mt-4 flex items-center gap-3 rounded-lg border-2 border-dashed border-[var(--gold)] bg-[var(--gold)]/10 p-4">
-                    <Crown className="h-5 w-5 text-[var(--gold)]" />
-                    <div className="flex-1 text-sm">
-                      <div className="font-bold text-[var(--primary-deep)]">Bundle offer applied — Most Popular!</div>
-                      <div className="text-xs text-muted-foreground">15% off when you buy 2 or more — saving ${bundleSavings.toFixed(2)}</div>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 
-            {/* ADDRESS */}
             {step === "address" && (
               <form onSubmit={submitAddress} className="rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)]">
                 <h2 className="font-display text-xl font-bold">Shipping address</h2>
-                <p className="text-xs text-muted-foreground">FREE shipping on every order.</p>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   {([
                     ["name", "Full name", "text"],
@@ -295,12 +181,8 @@ function CheckoutPage() {
                       <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </Field>
                   </div>
-                  <Field label="City" error={errors.city}>
-                    <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </Field>
-                  <Field label="State" error={errors.state}>
-                    <input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} placeholder="e.g. CA" className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </Field>
+                  <Field label="City" error={errors.city}><input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" /></Field>
+                  <Field label="State" error={errors.state}><input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} placeholder="e.g. CA" className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" /></Field>
                 </div>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button type="button" onClick={() => setStep("cart")} className="rounded-full border px-6 py-2.5 text-sm font-semibold hover:bg-muted">Back to cart</button>
@@ -311,92 +193,50 @@ function CheckoutPage() {
               </form>
             )}
 
-            {/* PAYMENT */}
             {step === "payment" && (
               <div className="rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)]">
-                <h2 className="font-display text-xl font-bold">Payment method</h2>
-                <div className="mt-4 space-y-3">
-                  {([
-                    ["card", "Credit / Debit Card", "Visa, Mastercard, Amex, Discover"],
-                    ["paypal", "PayPal", "Pay securely with your PayPal account"],
-                  ] as const).map(([id, label, desc]) => (
-                    <label key={id} className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition ${payment === id ? "border-primary bg-accent/40" : "border-border"}`}>
-                      <input type="radio" checked={payment === id} onChange={() => setPayment(id)} className="h-4 w-4 accent-[var(--primary)]" />
-                      <div className="flex-1">
-                        <div className="text-sm font-semibold">{label}</div>
-                        <div className="text-xs text-muted-foreground">{desc}</div>
-                      </div>
-                    </label>
-                  ))}
+                <h2 className="font-display text-xl font-bold">Payment</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  When you click <b>Place Order</b> you'll be redirected to secure Stripe checkout
+                  (or, while we're in test mode, your order will be created instantly).
+                </p>
+
+                <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                  <div className="flex items-center gap-2 font-semibold"><Lock className="h-4 w-4 text-primary" /> Secure payment</div>
+                  <p className="mt-1 text-xs text-muted-foreground">Powered by Stripe. We never see your card details.</p>
                 </div>
 
-                {payment === "card" && (
-                  <div className="mt-5 grid gap-4 md:grid-cols-2">
-                    <div className="md:col-span-2">
-                      <Field label="Card number"><input value={card.number} onChange={(e) => setCard({ ...card, number: e.target.value })} placeholder="1234 5678 9012 3456" className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" /></Field>
-                    </div>
-                    <Field label="Name on card"><input value={card.name} onChange={(e) => setCard({ ...card, name: e.target.value })} className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" /></Field>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Field label="Expiry"><input value={card.expiry} onChange={(e) => setCard({ ...card, expiry: e.target.value })} placeholder="MM / YY" className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" /></Field>
-                      <Field label="CVC"><input value={card.cvc} onChange={(e) => setCard({ ...card, cvc: e.target.value })} placeholder="123" className="h-11 w-full rounded-md border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" /></Field>
-                    </div>
-                  </div>
-                )}
-
-                {bundleSavings > 0 && (
-                  <div className="mt-4 flex items-center gap-3 rounded-lg border-2 border-dashed border-[var(--gold)] bg-[var(--gold)]/10 p-4">
-                    <Crown className="h-5 w-5 text-[var(--gold)]" />
-                    <div className="flex-1 text-sm">
-                      <div className="font-bold text-[var(--primary-deep)]">Bundle offer applied</div>
-                      <div className="text-xs text-muted-foreground">15% off — saving ${bundleSavings.toFixed(2)}</div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-4 flex items-center gap-2 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
-                  <Lock className="h-4 w-4 text-primary" /> Your payment information is encrypted and secure.
-                </div>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button onClick={() => setStep("address")} className="rounded-full border px-6 py-2.5 text-sm font-semibold hover:bg-muted">Back</button>
-                  <button onClick={placeOrder} className="flex-1 rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110 md:flex-none md:px-10">
-                    Place Order — ${total.toFixed(2)}
+                  <button onClick={placeOrder} disabled={loading} className="flex-1 rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110 disabled:opacity-50 md:flex-none md:px-10">
+                    {loading ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : `Place Order · $${total.toFixed(2)}`}
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Invoice only on cart step */}
-          {showInvoice && (
-            <aside className="lg:col-span-1">
-              <div className="sticky top-32 rounded-xl border bg-card p-6 shadow-[var(--shadow-card)]">
-                <h2 className="font-display text-xl font-bold">Invoice</h2>
-                <div className="mt-4 space-y-2 text-sm">
-                  <Row label={`Subtotal (${items.reduce((a, i) => a + i.qty, 0)} items)`} value={`$${subtotal.toFixed(2)}`} />
-                  {bundleSavings > 0 && (
-                    <Row label="Bundle offer (-15%)" value={`-$${bundleSavings.toFixed(2)}`} accent />
-                  )}
-                  <Row label="Shipping" value="FREE" />
-                  <Row label="Tax (7%)" value={`$${tax.toFixed(2)}`} />
-                </div>
-                <hr className="my-4" />
-                <div className="flex justify-between font-display text-lg font-bold">
-                  <span>Total</span><span className="text-primary">${total.toFixed(2)}</span>
-                </div>
-
-                <button
-                  onClick={() => { setStep("address"); navigate({ to: "/checkout", search: { step: "address" } }); }}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110"
-                >
-                  Proceed to Buy <ArrowRight className="h-4 w-4" />
-                </button>
-
-                <div className="mt-4 flex items-center gap-2 rounded-md bg-accent/40 p-3 text-xs">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> Secure SSL encrypted checkout
-                </div>
+          <aside className="space-y-3 rounded-xl border bg-card p-6 shadow-[var(--shadow-soft)] lg:sticky lg:top-24 lg:self-start">
+            <h2 className="font-display text-xl font-bold">Order Summary</h2>
+            <div className="flex justify-between text-sm"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+            <div className="flex justify-between text-sm"><span>Shipping</span><span>{shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}</span></div>
+            <div className="flex justify-between text-sm"><span>Tax (8%)</span><span>${tax.toFixed(2)}</span></div>
+            <hr />
+            <div className="flex justify-between font-bold"><span>Total</span><span className="text-primary">${total.toFixed(2)}</span></div>
+            {step === "cart" && (
+              <button onClick={() => setStep("address")} className="mt-3 w-full rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
+                Continue to Shipping
+              </button>
+            )}
+            <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" /> 30-day returns · Free shipping over $50
+            </p>
+            {subtotal < 50 && (
+              <div className="mt-2 flex items-center gap-1.5 rounded-md bg-accent/30 px-2 py-1.5 text-[11px] text-[var(--primary-deep)]">
+                <Crown className="h-3 w-3" /> Add ${(50 - subtotal).toFixed(2)} more for free shipping
               </div>
-            </aside>
-          )}
+            )}
+          </aside>
         </div>
       </div>
       <Footer />
@@ -411,14 +251,5 @@ function Field({ label, error, children }: { label: string; error?: string; chil
       {children}
       {error && <span className="mt-1 block text-xs text-destructive">{error}</span>}
     </label>
-  );
-}
-
-function Row({ label, value, accent, mono }: { label: string; value: string; accent?: boolean; mono?: boolean }) {
-  return (
-    <div className="flex justify-between gap-4">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={`text-right font-semibold ${accent ? "text-[var(--success)]" : ""} ${mono ? "font-mono" : ""}`}>{value}</span>
-    </div>
   );
 }
