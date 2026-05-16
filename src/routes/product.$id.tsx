@@ -285,8 +285,9 @@ function ProductPage({ product }: { product: Product }) {
 
           <hr className="my-4" />
 
-          <div className="flex flex-wrap items-baseline gap-3">
-            <span className="font-display text-4xl font-bold text-primary">${product.price}</span>
+          <FlashOfferCard price={product.price} oldPrice={product.oldPrice} />
+
+          <div className="mt-3">
             <span className="rounded-full bg-[var(--success)]/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--success)]">
               Free Shipping Included
             </span>
