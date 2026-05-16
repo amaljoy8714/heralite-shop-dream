@@ -95,7 +95,7 @@ export function Header() {
             search={{ redirect: "/" }}
             className="flex items-center gap-2 rounded-full border border-primary/20 bg-white px-3 py-2 text-sm font-bold text-[var(--primary-deep)] transition-all hover:-translate-y-0.5 hover:border-primary/50"
           >
-            <LogIn className="h-[18px] w-[18px] text-primary" />
+            <User className="h-[18px] w-[18px] text-primary" />
             <span className="hidden md:inline">Sign in</span>
           </Link>
         )}
