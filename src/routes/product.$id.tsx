@@ -132,6 +132,10 @@ const faqs = [
   { q: "What if I’m not happy with my order?", a: "We offer a hassle-free 30-day return policy. Contact us and we’ll make it right." },
 ];
 
+function SectionGap() {
+  return <div className="h-2 w-full bg-muted/60 md:hidden" />;
+}
+
 type ServiceItem = { icon: typeof Truck; title: string; subtitle: string; body: string };
 const SERVICE_ITEMS: ServiceItem[] = [
   { icon: Truck, title: "Free shipping worldwide", subtitle: "Delivery in 3–7 business days", body: "Every order ships free and arrives within 3–7 business days with full tracking. We dispatch from our nearest fulfillment hub to keep your delivery fast and safe." },
