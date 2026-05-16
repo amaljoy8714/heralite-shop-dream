@@ -86,7 +86,7 @@ function LoginPage() {
         </Link>
         <h1 className="text-center font-display text-2xl font-bold">{mode === "signin" ? "Welcome back" : "Create your account"}</h1>
         <p className="mt-1 text-center text-sm text-muted-foreground">
-          {mode === "signin" ? "Sign in to write reviews" : "Join to share your experience"}
+          {mode === "signin" ? "Sign in to track orders & shop faster" : "Join HeraLite for a personalized shopping experience"}
         </p>
 
         <button
