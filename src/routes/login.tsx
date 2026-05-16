@@ -27,6 +27,22 @@ function LoginPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === "forgot") {
+      const parsed = z.object({ email: z.string().email() }).safeParse({ email });
+      if (!parsed.success) { toast.error("Enter a valid email"); return; }
+      setBusy(true);
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Password reset link sent! Check your email.");
+        setMode("signin");
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Failed to send reset link");
+      } finally { setBusy(false); }
+      return;
+    }
     const schema = z.object({
       email: z.string().email(),
       password: z.string().min(6, "Min 6 chars"),
