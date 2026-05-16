@@ -3,6 +3,7 @@ import { Sparkles, Heart, Leaf, Award, Star, Truck, ShieldCheck, MessageCircle }
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts } from "@/lib/products";
+import { usePriceOverrides } from "@/lib/products-db";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +21,11 @@ const ALL_PRODUCTS = [
 ];
 
 function HomePage() {
+  const { data: overrides } = usePriceOverrides();
+  const products = ALL_PRODUCTS.map((p) => {
+    const o = overrides?.get(p.id);
+    return o ? { ...p, price: o.price, oldPrice: o.oldPrice } : p;
+  });
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -153,7 +159,7 @@ function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-            {ALL_PRODUCTS.map((p, idx) => {
+            {products.map((p, idx) => {
               const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
               const isMain = p.id === mainProduct.id;
 

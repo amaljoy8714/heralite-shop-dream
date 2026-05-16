@@ -4,6 +4,7 @@ import { Star, Truck, ShieldCheck, RefreshCw, Check, Minus, Plus, Crown, Lock, U
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { mainProduct, soldOutProducts, BUNDLE_DISCOUNT, type Product } from "@/lib/products";
+import { usePriceOverrides } from "@/lib/products-db";
 import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
 
@@ -31,9 +32,16 @@ export const Route = createFileRoute("/product/$id")({
 
 function ProductRouter() {
   const { id } = Route.useParams();
+  const { data: overrides } = usePriceOverrides();
   const soldOut = soldOutProducts.find((p) => p.id === id);
-  if (soldOut) return <SoldOutPage product={soldOut} />;
-  return <ProductPage />;
+  if (soldOut) {
+    const o = overrides?.get(soldOut.id);
+    const product = o ? { ...soldOut, price: o.price, oldPrice: o.oldPrice } : soldOut;
+    return <SoldOutPage product={product} />;
+  }
+  const o = overrides?.get(mainProduct.id);
+  const product: Product = o ? { ...mainProduct, price: o.price, oldPrice: o.oldPrice } : mainProduct;
+  return <ProductPage product={product} />;
 }
 
 function SoldOutPage({ product }: { product: typeof soldOutProducts[number] }) {
@@ -124,8 +132,7 @@ const faqs = [
   { q: "What if I’m not happy with my order?", a: "We offer a hassle-free 30-day return policy. Contact us and we’ll make it right." },
 ];
 
-function ProductPage() {
-  const product: Product = mainProduct;
+function ProductPage({ product }: { product: Product }) {
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [bundle, setBundle] = useState<1 | 2 | 3>(1);
@@ -222,7 +229,7 @@ function ProductPage() {
   }, [lightboxOpen]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Header />
 
       <div className="mx-auto max-w-7xl px-4 py-3 text-xs text-muted-foreground md:px-6 md:py-4 md:text-sm">
@@ -363,12 +370,14 @@ function ProductPage() {
               </div>
             )}
 
-            <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-3 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
-              Add to Cart
-            </button>
-            <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-3 text-base font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
-              Buy Now
-            </button>
+            <div className="hidden md:block">
+              <button onClick={handleAdd} className="mt-4 w-full rounded-full bg-[var(--gold)] py-3 text-base font-bold uppercase tracking-wider text-[var(--primary-deep)] hover:brightness-95">
+                Add to Cart
+              </button>
+              <button onClick={handleBuyNow} className="mt-2 w-full rounded-full bg-primary py-3 text-base font-bold uppercase tracking-wider text-primary-foreground hover:brightness-110">
+                Buy Now
+              </button>
+            </div>
 
             {/* Trust row */}
             <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4 text-center">
@@ -555,6 +564,28 @@ function ProductPage() {
           </div>
         </div>
       )}
+
+      {/* Sticky mobile buy bar — premium */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/40 bg-white/85 px-3 py-3 shadow-[0_-12px_40px_-12px_rgba(20,20,40,0.25)] backdrop-blur-xl md:hidden" style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}>
+        <div className="mx-auto flex max-w-md items-center gap-2.5">
+          <div className="flex min-w-0 flex-col leading-tight">
+            <span className="font-display text-lg font-bold text-[var(--primary-deep)]">${effectiveTotal.toFixed(2)}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--success)]">In stock · Free ship</span>
+          </div>
+          <button
+            onClick={handleAdd}
+            className="ml-auto flex-1 rounded-full bg-gradient-to-b from-[var(--gold)] to-[oklch(0.74_0.15_75)] py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--primary-deep)] shadow-[0_8px_20px_-8px_oklch(0.78_0.14_80/0.7)] transition active:translate-y-0.5 active:brightness-95"
+          >
+            Add to Cart
+          </button>
+          <button
+            onClick={handleBuyNow}
+            className="flex-1 rounded-full bg-gradient-to-b from-primary to-[var(--primary-deep)] py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_20px_-8px_oklch(0.45_0.18_295/0.7)] transition active:translate-y-0.5 active:brightness-110"
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
 
       <Footer />
     </div>
