@@ -269,7 +269,7 @@ function ProductPage({ product }: { product: Product }) {
   const add = useCart((s) => s.add);
   const navigate = useNavigate();
 
-  const bundleQty = bundle;
+  const bundleQty = bundle > 1 ? bundle : qty;
   const baseTotal = product.price * bundleQty;
   const bundleSavings = bundleQty >= 2 ? baseTotal * BUNDLE_DISCOUNT : 0;
   const effectiveTotal = baseTotal - bundleSavings;
