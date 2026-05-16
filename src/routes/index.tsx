@@ -159,7 +159,7 @@ function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-            {ALL_PRODUCTS.map((p, idx) => {
+            {products.map((p, idx) => {
               const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
               const isMain = p.id === mainProduct.id;
 
