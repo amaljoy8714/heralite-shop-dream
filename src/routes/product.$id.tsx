@@ -32,9 +32,16 @@ export const Route = createFileRoute("/product/$id")({
 
 function ProductRouter() {
   const { id } = Route.useParams();
+  const { data: overrides } = usePriceOverrides();
   const soldOut = soldOutProducts.find((p) => p.id === id);
-  if (soldOut) return <SoldOutPage product={soldOut} />;
-  return <ProductPage />;
+  if (soldOut) {
+    const o = overrides?.get(soldOut.id);
+    const product = o ? { ...soldOut, price: o.price, oldPrice: o.oldPrice } : soldOut;
+    return <SoldOutPage product={product} />;
+  }
+  const o = overrides?.get(mainProduct.id);
+  const product: Product = o ? { ...mainProduct, price: o.price, oldPrice: o.oldPrice } : mainProduct;
+  return <ProductPage product={product} />;
 }
 
 function SoldOutPage({ product }: { product: typeof soldOutProducts[number] }) {
